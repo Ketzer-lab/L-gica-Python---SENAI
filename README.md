@@ -1,2 +1,2 @@
-# Logica-Python---SENAI
+# Logica-de-programacao-Python-SENAI
 Repositório referente ao primeiro módulo do curso Técnico em Desenvolvimento de Sistemas do SEINAI
