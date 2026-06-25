@@ -1,15 +1,19 @@
 
-altura = 3
+altura = 1
 largura = 20
-palavra = "Usuario"
 
-def quadrado(altura, largura):
+palavras = ("Usuários", "Clientes", "Fornecedores", "Relatórios")
+
+def linhas():
     print(f"+{largura*'-'}+")
 
+def colunas():
     for linha in range(altura):
         if linha == altura // 2:
             print(f"|{palavra.center(largura)}|")
         else:
             print(f"|{largura*" "}|")
-
-    print(f"+{largura*'-'}+")
+for palavra in palavras:
+    linhas()
+    colunas()
+    linhas()
