@@ -1,6 +1,6 @@
 
 altura = 1
-largura = 20
+largura = 16
 
 palavras = ("Usuários", "Clientes", "Fornecedores", "Relatórios")
 
@@ -16,4 +16,4 @@ def colunas():
 for palavra in palavras:
     linhas()
     colunas()
-    linhas()
+linhas()
