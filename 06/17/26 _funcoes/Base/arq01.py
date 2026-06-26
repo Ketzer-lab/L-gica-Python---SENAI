@@ -1,3 +1,5 @@
+# Normalmente colocamos as Funções antes de qualquer coisa, pois caso as variaveis estejam acima, as funções podem não encontar o que esta acima.
+
 def somar_valores(parametro1, parametro2):
     """Docstring: Soma 2 valores. """
     #Corpo da função:
