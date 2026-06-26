@@ -6,6 +6,3 @@ def fahrenheit_para_celsius(f):
 temp = 98
 celsius = fahrenheit_para_celsius(temp)
 print(celsius)
-
-f = float(input("Digite uma temperatura em Fahrenheit: "))
-print(fahrenheit_para_celsius(f))
