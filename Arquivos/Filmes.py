@@ -23,8 +23,9 @@ def menu():
 altura = 1
 largura = 40
 
-palavras = ("Adicionar Filme", "Quantidade total de filmes", "Informações de um filme pelo titulo", "Filmes de um diretor específico", "Filmes de um gênero específico", "Média de duração dos filmes", "Sair")
+palavras = ("Adicionar Filme - 0", "Quantidade total de filmes - 1", "Informações de um filme pelo titulo - 2", "Filmes de um diretor específico - 3", "Filmes de um gênero específico - 4", "Média de duração dos filmes - 5", "Sair - ")
 
+titulos = []
 diretores = []
 genero = []
 
@@ -37,11 +38,15 @@ opcao = int(input("O que você deseja fazer: "))
 
 if opcao == 0:
     while True:
-        filme = input("Escreva o título do filme: ")
-        filmes.append(filme)
-        if filme == "":
+        titulo = input("Escreva o título do filme: ")
+        diretor = input("Escreva o nome do diretor: ")
+        titulos.append(titulo)
+        diretores.append(diretor)
+        if titulo == " ":
+            break
+        if diretor == " ":
             break
         with open("Arq_Filmes.txt", "w") as f:
-            for filmes in filme:
-                f.write(filme + "\n")
+            for titulo in titulos:
+                f.write(titulo + "\n")
 
