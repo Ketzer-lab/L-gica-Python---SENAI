@@ -1,3 +1,5 @@
+# Le e printa o que esta esceito dentro de um arquivo
+
 with open("exemplo.txt", "r") as f:
     conteudo = f.read()
     print(conteudo)
