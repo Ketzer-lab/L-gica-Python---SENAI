@@ -27,26 +27,63 @@ palavras = ("Adicionar Filme - 0", "Quantidade total de filmes - 1", "Informaç�
 
 titulos = []
 diretores = []
-genero = []
+generos = []
+duracao = []
 
 for palavra in palavras:
     linhas()
     colunas()
 linhas()
 
-opcao = int(input("O que você deseja fazer: "))
+while True:
 
-if opcao == 0:
-    while True:
-        titulo = input("Escreva o título do filme: ")
-        diretor = input("Escreva o nome do diretor: ")
-        titulos.append(titulo)
-        diretores.append(diretor)
-        if titulo == " ":
-            break
-        if diretor == " ":
-            break
+    opcao = int(input("O que você deseja fazer: "))
+
+    if opcao == 0:
+        while True:
+            titulo = input("Escreva o título do filme: ")
+
+            if titulo == "":
+                break
+        
+            titulos.append(titulo)
+
+            diretor = input("Escreva o nome do diretor: ")
+        
+            if diretor == "":
+                break
+
+            diretores.append(diretor)
+
+            genero = input("Escreva o gênero do filme: ")
+
+            if genero == "":
+                break
+
+            generos.append(genero)
+
+            tempo = input("Escreva quantos minutos de duração tem o filme: ")
+
+            if tempo == "":
+                break
+
+            duracao.append(tempo)
+
         with open("Arq_Filmes.txt", "w") as f:
-            for titulo in titulos:
-                f.write(titulo + "\n")
+            for i in range(len(titulos)):
+                f.write(f"{titulos[i]} - {diretores[i]} - {generos[i]} - {duracao[i]}\n")
 
+        continue
+
+    if  opcao == 1:
+        print(len(titulos))
+        continue
+
+    if opcao == 2:
+        
+        titulo_procurado = input("Digite o titulo do filme:")
+
+        with open("Arq_Filmes.txt", "r") as f:
+
+
+        continue
