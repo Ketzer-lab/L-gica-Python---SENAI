@@ -22,17 +22,11 @@ def adicionar_filme():
             diretor = input("Escreva o nome do diretor: ")
             genero = input("Escreva o gênero do filme: ")
             tempo = input("Escreva quantos minutos de duração tem o filme: ")
-    
-            filmes.append({
-                "Título": titulo,
-                "Diretor": diretor,
-                "Gênero": genero,
-                "Duração": tempo
-            })
 
-    with open("Arq_Filmes.txt", "w", encoding="utf-8") as f:
-        for filme in filmes:
-            f.write(f"{filme['Título']} - {filme['Diretor']} - {filme['Gênero']} - {filme['Duração']}\n")
+            with open("Arq_Filmes.txt", "a", encoding="utf-8") as f:
+                f.write(f"{titulo} - {diretor} - {genero} - {tempo}\n")
+
+    print("Filme adicionado com sucesso!")
 
 def quantidade_de_filmes():
         """Conta e imprime a quantidade de filmes presentes no arquivo."""
@@ -100,7 +94,7 @@ def media_filmes():
     soma_duracao = 0
     quantidade = 0
 
-    with open("Arq_Filme.txt", "r", encoding="utf-8") as f:
+    with open("Arq_Filmes.txt", "r", encoding="utf-8") as f:
         for linha in f:
             dados =linha.strip().split(" - ")
 
@@ -119,8 +113,6 @@ largura = 40
 
 palavras = ("Adicionar Filme - 0", "Quantidade total de filmes - 1", "Informações de um filme pelo titulo - 2", "Filmes de um diretor específico - 3", "Filmes de um gênero específico - 4", "Média de duração dos filmes - 5", "Sair - ")
 
-filmes = []
-
 if __name__ == "__main__":
 
     for palavra in palavras:
@@ -134,15 +126,15 @@ while True:
 
     if opcao == 0:
         adicionar_filme()
-    if  opcao == 1:
+    elif  opcao == 1:
         quantidade_de_filmes()
-    if opcao == 2:
+    elif opcao == 2:
         informacao_filme()
-    if opcao == 3:
+    elif opcao == 3:
         diretor_filme()
-    if opcao == 4:
+    elif opcao == 4:
         genero_filme()
-    if opcao == 5:
+    elif opcao == 5:
         media_filmes()
-    if opcao == 6:
+    elif opcao == 6:
         break
