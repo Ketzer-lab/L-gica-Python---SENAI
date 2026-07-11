@@ -1,2 +1,5 @@
-paraia - leo - acao - 120
-vera - gui - acao - 150
+praia - l - acao - 120
+vera - l - suspense - 150
+kill - l - terror - 130
+ppoder - l - fantasia - 110
+baia - l - fantasia - 100
