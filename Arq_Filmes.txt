@@ -1,46 +1,47 @@
-Interestelar - Christopher Nolan - Ficção Científica - 169
-A Origem - Christopher Nolan - Ficção Científica - 148
-Batman Begins - Christopher Nolan - Ação - 140
-O Cavaleiro das Trevas - Christopher Nolan - Ação - 152
-Oppenheimer - Christopher Nolan - Drama - 180
-Titanic - James Cameron - Romance - 194
-Avatar - James Cameron - Ficção Científica - 162
-Avatar: O Caminho da Água - James Cameron - Ficção Científica - 192
-O Exterminador do Futuro - James Cameron - Ação - 107
-Pulp Fiction - Quentin Tarantino - Crime - 154
-Django Livre - Quentin Tarantino - Faroeste - 165
-Bastardos Inglórios - Quentin Tarantino - Guerra - 153
-Kill Bill Vol. 1 - Quentin Tarantino - Ação - 111
-O Poderoso Chefão - Francis Ford Coppola - Crime - 175
-O Poderoso Chefão Parte II - Francis Ford Coppola - Crime - 202
-Apocalypse Now - Francis Ford Coppola - Guerra - 147
-Matrix - Lana Wachowski e Lilly Wachowski - Ficção Científica - 136
-O Senhor dos Anéis: A Sociedade do Anel - Peter Jackson - Fantasia - 178
-O Senhor dos Anéis: As Duas Torres - Peter Jackson - Fantasia - 179
-O Senhor dos Anéis: O Retorno do Rei - Peter Jackson - Fantasia - 201
-Harry Potter e a Pedra Filosofal - Chris Columbus - Fantasia - 152
-Harry Potter e o Prisioneiro de Azkaban - Alfonso Cuarón - Fantasia - 142
-Gladiador - Ridley Scott - Ação - 155
-Alien: O Oitavo Passageiro - Ridley Scott - Ficção Científica - 117
-Perdido em Marte - Ridley Scott - Ficção Científica - 144
-Forrest Gump - Robert Zemeckis - Drama - 142
-De Volta Para o Futuro - Robert Zemeckis - Ficção Científica - 116
-O Náufrago - Robert Zemeckis - Drama - 143
-Clube da Luta - David Fincher - Drama - 139
-Seven: Os Sete Crimes Capitais - David Fincher - Suspense - 127
-A Rede Social - David Fincher - Drama - 120
-Os Infiltrados - Martin Scorsese - Crime - 151
-Taxi Driver - Martin Scorsese - Drama - 114
-O Lobo de Wall Street - Martin Scorsese - Comédia - 180
-Os Bons Companheiros - Martin Scorsese - Crime - 146
-Parasita - Bong Joon-ho - Suspense - 132
-O Expresso do Amanhã - Bong Joon-ho - Ficção Científica - 126
-Coringa - Todd Phillips - Drama - 122
-Vingadores: Ultimato - Anthony Russo e Joe Russo - Ação - 181
-Homem de Ferro - Jon Favreau - Ação - 126
-Pantera Negra - Ryan Coogler - Ação - 134
-Toy Story - John Lasseter - Animação - 81
-O Rei Leão - Roger Allers e Rob Minkoff - Animação - 88
-procurando nemo - steve - animação - 100
-praia - leo - suspense - 120
-pimbada de 87 - steven cotones - terror - 169
+Interestelar - 2014 - Christopher Nolan - Ficção Científica - 169
+A Origem - 2010 - Christopher Nolan - Ficção Científica - 148
+Batman Begins - 2005 - Christopher Nolan - Ação - 140
+O Cavaleiro das Trevas - 2008 - Christopher Nolan - Ação - 152
+Oppenheimer - 2023 - Christopher Nolan - Drama - 180
+Titanic - 1997 - James Cameron - Romance - 194
+Avatar - 2009 - James Cameron - Ficção Científica - 162
+Avatar: O Caminho da Água - 2022 - James Cameron - Ficção Científica - 192
+O Exterminador do Futuro - 1984 - James Cameron - Ação - 107
+Pulp Fiction - 1994 - Quentin Tarantino - Crime - 154
+Django Livre - 2012 - Quentin Tarantino - Faroeste - 165
+Bastardos Inglórios - 2009 - Quentin Tarantino - Guerra - 153
+Kill Bill Vol. 1 - 2003 - Quentin Tarantino - Ação - 111
+O Poderoso Chefão - 1972 - Francis Ford Coppola - Crime - 175
+O Poderoso Chefão Parte II - 1974 - Francis Ford Coppola - Crime - 202
+Apocalypse Now - 1979 - Francis Ford Coppola - Guerra - 147
+Matrix - 1999 - Lana Wachowski e Lilly Wachowski - Ficção Científica - 136
+O Senhor dos Anéis: A Sociedade do Anel - 2001 - Peter Jackson - Fantasia - 178
+O Senhor dos Anéis: As Duas Torres - 2002 - Peter Jackson - Fantasia - 179
+O Senhor dos Anéis: O Retorno do Rei - 2003 - Peter Jackson - Fantasia - 201
+Harry Potter e a Pedra Filosofal - 2001 - Chris Columbus - Fantasia - 152
+Harry Potter e o Prisioneiro de Azkaban - 2004 - Alfonso Cuarón - Fantasia - 142
+Gladiador - 2000 - Ridley Scott - Ação - 155
+Alien: O Oitavo Passageiro - 1979 - Ridley Scott - Ficção Científica - 117
+Perdido em Marte - 2015 - Ridley Scott - Ficção Científica - 144
+Forrest Gump - 1994 - Robert Zemeckis - Drama - 142
+De Volta Para o Futuro - 1985 - Robert Zemeckis - Ficção Científica - 116
+O Náufrago - 2000 - Robert Zemeckis - Drama - 143
+Clube da Luta - 1999 - David Fincher - Drama - 139
+Seven: Os Sete Crimes Capitais - 1995 - David Fincher - Suspense - 127
+A Rede Social - 2010 - David Fincher - Drama - 120
+Os Infiltrados - 2006 - Martin Scorsese - Crime - 151
+Taxi Driver - 1976 - Martin Scorsese - Drama - 114
+O Lobo de Wall Street - 2013 - Martin Scorsese - Comédia - 180
+Os Bons Companheiros - 1990 - Martin Scorsese - Crime - 146
+Parasita - 2019 - Bong Joon-ho - Suspense - 132
+O Expresso do Amanhã - 2013 - Bong Joon-ho - Ficção Científica - 126
+Coringa - 2019 - Todd Phillips - Drama - 122
+Vingadores: Ultimato - 2019 - Anthony Russo e Joe Russo - Ação - 181
+Homem de Ferro - 2008 - Jon Favreau - Ação - 126
+Pantera Negra - 2018 - Ryan Coogler - Ação - 134
+Toy Story - 1995 - John Lasseter - Animação - 81
+O Rei Leão - 1994 - Roger Allers e Rob Minkoff - Animação - 88
+procurando nemo - 2003 - steve - animação - 100
+praia - 2024 - leo - suspense - 120
+pimbada de 87 - 1987 - steven cotones - terror - 169A Ilha do Medo - 2010 - Martin Scorsese - Suspense - 138
+A ilha do medo - 2010 - Martin Scorsese - Suspense - 139
