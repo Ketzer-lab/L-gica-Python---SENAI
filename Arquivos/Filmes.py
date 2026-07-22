@@ -138,3 +138,5 @@ while True:
         media_filmes()
     elif opcao == 6:
         break
+    else:
+        print("Cáracter inválido: Tente Novamente")
