@@ -111,7 +111,7 @@ def media_filmes():
 altura = 1
 largura = 40
 
-palavras = ("Adicionar Filme - 0", "Quantidade total de filmes - 1", "Informações de um filme pelo titulo - 2", "Filmes de um diretor específico - 3", "Filmes de um gênero específico - 4", "Média de duração dos filmes - 5", "Sair - ")
+palavras = ("Adicionar Filme - 0", "Quantidade total de filmes - 1", "Informações de um filme pelo titulo - 2", "Filmes de um diretor específico - 3", "Filmes de um gênero específico - 4", "Média de duração dos filmes - 5", "Sair - 6")
 
 if __name__ == "__main__":
 
@@ -122,7 +122,11 @@ if __name__ == "__main__":
 
 while True:
 
-    opcao = int(input("O que você deseja fazer: "))
+    try:
+        opcao = int(input("O que você deseja fazer: "))
+    except ValueError:
+        print("Digite apenas um dos números indicados!")
+        continue
 
     if opcao == 0:
         adicionar_filme()
