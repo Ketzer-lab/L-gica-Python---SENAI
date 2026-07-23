@@ -24,15 +24,15 @@ def adicionar_filme():
             genero = input("Digite o gênero do filme: ")
             tempo = input("Digite quantos minutos de duração tem o filme: ")
 
-            with open("Arq_Filmes.txt", "a", encoding="utf-8") as f:
-                f.write(f"{titulo} - {ano} - {diretor} - {genero} - {tempo}\n")
+            with open("Arq_Filmes.txt", "a", encoding="utf-8") as f:    # O with faz com que o arq só se mantenha aberto enquanto aquele trexo estiver em uso. "a" adiciona informações no final do arquivo sem apagar o que já estava lá e o enconding="utf-8" impede que algums caracteres dem erro como ç ou acentos, o "f" é como chamamos o arquivo.
+                f.write(f"{titulo} - {ano} - {diretor} - {genero} - {tempo}\n")     # Escreve as novas informações nesssa ordem e as caracteriza dessa forma.
 
     print("Filme adicionado com sucesso!")
 
 def quantidade_de_filmes():
         """Conta e imprime a quantidade de filmes presentes no arquivo."""
-        with open("Arq_Filmes.txt", "r", encoding="utf-8") as f:
-            quantidade = len(f.readlines())
+        with open("Arq_Filmes.txt", "r", encoding="utf-8") as f:    # "r" significa read, ela le o que esta np arq
+            quantidade = len(f.readlines())     # Le a quantidade de linhas no arq
             print(f"Quantidade de filmes: {quantidade}")
 
 def informacao_filme():
@@ -40,18 +40,18 @@ def informacao_filme():
     titulo_procurado = input("Digite o titulo do filme: ")
 
     with open("Arq_Filmes.txt", "r", encoding="utf-8") as f:
-        encontrado = False
+        encontrado = False  # Decide se o filme foi ou não encontrado, false significa não.
 
-        for linha in f:
-            dados = linha.strip().split(" - ")
+        for linha in f:     # Para linha no arquivo
+            dados = linha.strip().split(" - ")      # .strip remove os espaços desnecessarios e .split tranforma 1 linha em multiplas, cortando onde tiver " - ".
 
-            if dados[0].lower() == titulo_procurado.lower():
+            if dados[0].lower() == titulo_procurado.lower():    # Da um numero para cada dado
                 print(f"Título: {dados[0]}")
                 print(f"Ano: {dados[1]}")
                 print(f"Diretor: {dados[2]}")
                 print(f"Gênero: {dados[3]}")
                 print(f"Duração: {dados[4]} minutos")
-                encontrado = True
+                encontrado = True   # Significa que o filme foi encontrado
                 break
 
         if not encontrado:
@@ -114,15 +114,15 @@ def media_filmes():
     quantidade = 0
 
     with open("Arq_Filmes.txt", "r", encoding="utf-8") as f:
-        for linha in f:
+        for linha in f: # Repete o código no mesmo numero de linhas no arquivo
             dados =linha.strip().split(" - ")
 
             duracao = int(dados[4])
-            soma_duracao += duracao
-            quantidade += 1
+            soma_duracao += duracao # Soma a duração de todos os filmes arquivados
+            quantidade += 1 # Conta a quantidade de filmes estão arquivados com base na repetição do código
 
         if quantidade > 0:
-            media = soma_duracao / quantidade
+            media = soma_duracao / quantidade   #Calcula a média dos filmes
             print(f"A média de duração dos filmes é de {media:.2f} minutos.")
         else:
             print("Não existem filmes arquivados.")
