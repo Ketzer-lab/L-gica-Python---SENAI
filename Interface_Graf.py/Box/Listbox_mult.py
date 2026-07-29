@@ -8,14 +8,16 @@ root.geometry("800x600")
 def selecao_mudou(evento):
     sel = evento.widget.curselection()
     if sel:
-        idx = sel[0]
-        label.config(text=f"{evento.widget.get(idx)} Selecionado!")
+        itens = [evento.widget.get(i) for i in sel]
+        label.config(text=f"{', '.join(itens) } selecionado(s)! ")
+    else:
+        label.config(text="Nenhum item selecionado")
 
-listbox = tk.Listbox(root)
+listbox = tk.Listbox(root, selectmode="multiple")
 for item in ["Primeiro", "Segundo", "Terceiro"]:
     listbox.insert(tk.END, item)
 
-listbox.bind("<<ListaboxSelected>>", selecao_mudou)
+listbox.bind("<<ListboxSelect>>", selecao_mudou)
 listbox.pack(expand=True)
 
 label = tk.Label(root, text="Primeiro selecionado!")
