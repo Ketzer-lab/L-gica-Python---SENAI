@@ -3,9 +3,10 @@ from tkinter import ttk
 
 root = tk.Tk()  # A janela principal, a raiz o root.
 root.title("SENAI - Desenvolvimento de Sistemas")   # Título que estará acima da janela
-root.geometry("800x600")    # Tamanho da janela
+root.geometry("300x200")    # Tamanho da janela
 
 def calculo():
+    """Faz o cálculo do IMC"""
     try:    # Try é usado quando o código pode dar um erro, então após ele é usado um except.
         peso = float(entrypeso.get())   # O .get pegao que foi digitado em uma caixa entry e envia para o sistema.
         altura = float(entryaltura.get())   # Nesse caso o .get envia os números para que o IMC possa ser calculado.
