@@ -8,8 +8,9 @@ root.geometry("300x200")    # Tamanho da janela
 def calculo():
     """Faz o cálculo do IMC"""
     try:    # Try é usado quando o código pode dar um erro, então após ele é usado um except.
-        peso = float(entrypeso.get())   # O .get pegao que foi digitado em uma caixa entry e envia para o sistema.
-        altura = float(entryaltura.get())   # Nesse caso o .get envia os números para que o IMC possa ser calculado.
+        peso = float(entrypeso.get().replace(",", "."))   # O .get pegao que foi digitado em uma caixa entry e envia para o sistema.
+        altura = float(entryaltura.get().replace(",", "."))   # Nesse caso o .get envia os números para que o IMC possa ser calculado.
+        # .replace substitui o primeiro " " pelo segundo para evitar erros como no caso do usuario usando , eo invés de . em sistemas em python.
 
         imc = peso / (altura*altura)    # Não se pode digitar palavras pois elas resultariam num erro no cálculo.
 
