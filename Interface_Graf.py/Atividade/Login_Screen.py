@@ -3,13 +3,13 @@ import tkinter as tk
 root = tk.Tk()
 root.title("SENAI - Desenvolvimento de Sistemas")
 root.config(bg="white")
-root.geometry("400x600")
+root.geometry("300x350")
 
 label_login = tk.Label(root, text="Faça seu login")
 label_login.config(bg="white")
 label_login.pack()
 
-imagem = tk.PhotoImage(file="profile.png")
+imagem = tk.PhotoImage(file="profile.png").subsample(3, 3)
 label_imagem = tk.Label(root, image=imagem)
 label_imagem.image = imagem
 label_imagem.config(bg="white")

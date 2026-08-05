@@ -6,5 +6,6 @@ root.config(bg="skyblue")
 
 frame = tk.Frame(root, width=200, height=200)
 frame.pack(padx=10, pady=10)
+frame.config(bg="green")
 
 root.mainloop()
