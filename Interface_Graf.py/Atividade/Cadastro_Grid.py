@@ -4,7 +4,6 @@ from tkinter import ttk
 root = tk.Tk(); root.title("SENAI - Cadastro")
 root.config(bg="white")
 
-# Foto de perfil (placeholder)
 foto = tk.PhotoImage(file="profile.png").subsample(3, 3)
 label_foto = tk.Label(root, image=foto, bg="white")
 label_foto.grid(row=0, column=0, rowspan=6, padx=10, pady=10)
