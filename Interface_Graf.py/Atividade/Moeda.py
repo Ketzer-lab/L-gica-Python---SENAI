@@ -1,5 +1,4 @@
 import tkinter as tk
-import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 
@@ -17,9 +16,9 @@ def conversao():
     origem = combo_moeda.get()
     conver = combo_conver.get()
 
-    calculo = "USD"
+    calculo = valor * conver
 
-    label_result.config(text= f"{origem} = {calculo}")
+    label_result.config(text= f"{origem}{valor} = {calculo}{calculo}")
 
 root= tk.Tk()
 root.title("Coversor de Moedas")
