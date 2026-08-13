@@ -56,8 +56,20 @@ app_empate.place(x=0, y=95)
 #Configuração do frame de baixo
 icon_pedra = Image.open("./images/pedra.png")
 icon_pedra = icon_pedra.resize((50, 50), Image.Rasampling.LANCZOS)
-icon_pedra = ImageTk.Photoimage(icon_pedra)
-btn_pedra = tk.Button(frame_baixo, widht=50, height=50, image=icon_pedra, )
+icon_pedra = ImageTk.PhotoImage(icon_pedra)
+btn_pedra = tk.Button(frame_baixo, widht=50, height=50, image=icon_pedra, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_pedra.place(x=15, y=60)
 
+icon_tesoura = Image.open("./images/tesoura.png")
+icon_tesoura = icon_tesoura.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_tesoura = ImageTk.PhotoImage(icon_tesoura)
+btn_tesoura = tk.Button(frame_baixo, widht=50, height=50, image=icon_tesoura, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_tesoura.place(x=30, y=60)
+
+icon_papel = Image.open("./images/papel.png")
+icon_papel = icon_papel.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_papel = ImageTk.PhotoImage(icon_papel)
+btn_papel = tk.Button(frame_baixo, widht=50, height=50, image=icon_papel, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_papel.place(x=45, y=60)
 
 janela.mainloop()
