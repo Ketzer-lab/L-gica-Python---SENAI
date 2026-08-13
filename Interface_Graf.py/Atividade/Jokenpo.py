@@ -26,38 +26,38 @@ frame_baixo = tk.Frame(janela, width=260, height=300, bg=cor0, relief="flat")
 frame_baixo.grid(row=1, column=0, sticky=NW)
 
 #Jogadores
-app_pessoa = Label(frame_cima, text="Jogador", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 10 bold"))
+app_pessoa = tk.Label(frame_cima, text="Jogador", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 10 bold"))
 app_pessoa.place(x=10, y=70)
 #Barra marcou pontos
-app_pessoa_linha = Label(frame_cima, text="", height=10, anchor="center", bg=cor4, fg=cor0, font=("Ivy 10 bold"))
+app_pessoa_linha = tk.Label(frame_cima, text="", height=10, anchor="center", bg=cor4, fg=cor0, font=("Ivy 10 bold"))
 app_pessoa_linha.place(x=0, y=0)
 #Pontuação
-app_pessoa_pontos = Label(frame_cima, text="0", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
+app_pessoa_pontos = tk.Label(frame_cima, text="0", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
 app_pessoa_pontos.place(x=50, y=20)
 
 #Separação da pontuação
-app_vs = Label(frame_cima, text=":", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
+app_vs = tk.Label(frame_cima, text=":", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
 app_vs.place(x=125, y=20)
 
 #Computador
-app_pc = Label(frame_cima, text="PC", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 10 bold"))
+app_pc = tk.Label(frame_cima, text="PC", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 10 bold"))
 app_pc.place(x=200, y=70)
 #Barra marcou pontos
-app_pc_linha = Label(frame_cima, text="", height=10, anchor="center", bg=cor5, fg=cor0, font=("Ivy 10 bold"))
+app_pc_linha = tk.Label(frame_cima, text="", height=10, anchor="center", bg=cor5, fg=cor0, font=("Ivy 10 bold"))
 app_pc_linha.place(x=255, y=0)
 #Pontuação
-app_pc_pontos = Label(frame_cima, text="0", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
+app_pc_pontos = tk.Label(frame_cima, text="0", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 30 bold"))
 app_pc_pontos.place(x=180, y=20)
 
 #Barra de empate
-app_empate = Label(frame_cima, text="", width=225, anchor="center", bg=cor2, fg=cor0, font=("Ivy 10 bold"))
+app_empate = tk.Label(frame_cima, text="", width=225, anchor="center", bg=cor2, fg=cor0, font=("Ivy 10 bold"))
 app_empate.place(x=0, y=95)
 
 #Configuração do frame de baixo
 icon_pedra = Image.open("./images/pedra.png")
 icon_pedra = icon_pedra.resize((50, 50), Image.Rasampling.LANCZOS)
 icon_pedra = ImageTk.Photoimage(icon_pedra)
-btn_pedra = Button(frame_baixo, widht=50, height=50, image=icon_pedra, )
+btn_pedra = tk.Button(frame_baixo, widht=50, height=50, image=icon_pedra, )
 
 
 janela.mainloop()
