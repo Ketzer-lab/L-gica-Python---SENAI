@@ -1,6 +1,9 @@
 import tkinter as tk
-from tkinter import NW, Label, ttk
+from tkinter import ttk
 from tkinter import messagebox
+
+#pip install Pillow -> No terminal
+from PIL import Image, ImageTk
 
 cor0 = "#FFFFFF" #White/Branco
 cor1 = "#333333" #Black/Preto
@@ -49,5 +52,12 @@ app_pc_pontos.place(x=180, y=20)
 #Barra de empate
 app_empate = Label(frame_cima, text="", width=225, anchor="center", bg=cor2, fg=cor0, font=("Ivy 10 bold"))
 app_empate.place(x=0, y=95)
+
+#Configuração do frame de baixo
+icon_pedra = Image.open("./images/pedra.png")
+icon_pedra = icon_pedra.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_pedra = ImageTk.Photoimage(icon_pedra)
+btn_pedra = Button(frame_baixo, widht=50, height=50, image=icon_pedra, )
+
 
 janela.mainloop()
