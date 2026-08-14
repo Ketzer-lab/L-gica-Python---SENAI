@@ -21,9 +21,9 @@ janela.configure(bg=fundo)
 
 #Cria os frames(quadrado preto e branco) que vão conter os elementos da interface
 frame_cima = tk.Frame(janela, width=260, height=100, bg=cor1, relief="raised")
-frame_cima.grid(row=0, column=0, sticky=NW)
+frame_cima.grid(row=0, column=0, sticky=tk.NW)
 frame_baixo = tk.Frame(janela, width=260, height=300, bg=cor0, relief="flat")
-frame_baixo.grid(row=1, column=0, sticky=NW)
+frame_baixo.grid(row=1, column=0, sticky=tk.NW)
 
 #Jogadores
 app_pessoa = tk.Label(frame_cima, text="Jogador", height=1, anchor="center", bg=cor1, fg=cor0, font=("Ivy 10 bold"))
@@ -55,21 +55,25 @@ app_empate.place(x=0, y=95)
 
 #Configuração do frame de baixo
 icon_pedra = Image.open("./images/pedra.png")
-icon_pedra = icon_pedra.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_pedra = icon_pedra.resize((50, 50), Image.Resampling.LANCZOS)
 icon_pedra = ImageTk.PhotoImage(icon_pedra)
-btn_pedra = tk.Button(frame_baixo, widht=50, height=50, image=icon_pedra, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_pedra = tk.Button(frame_baixo, width=50, height=50, image=icon_pedra, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
 btn_pedra.place(x=15, y=60)
 
 icon_tesoura = Image.open("./images/tesoura.png")
-icon_tesoura = icon_tesoura.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_tesoura = icon_tesoura.resize((50, 50), Image.Resampling.LANCZOS)
 icon_tesoura = ImageTk.PhotoImage(icon_tesoura)
-btn_tesoura = tk.Button(frame_baixo, widht=50, height=50, image=icon_tesoura, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
-btn_tesoura.place(x=30, y=60)
+btn_tesoura = tk.Button(frame_baixo, width=50, height=50, image=icon_tesoura, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_tesoura.place(x=100, y=60)
 
 icon_papel = Image.open("./images/papel.png")
-icon_papel = icon_papel.resize((50, 50), Image.Rasampling.LANCZOS)
+icon_papel = icon_papel.resize((50, 50), Image.Resampling.LANCZOS)
 icon_papel = ImageTk.PhotoImage(icon_papel)
-btn_papel = tk.Button(frame_baixo, widht=50, height=50, image=icon_papel, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
-btn_papel.place(x=45, y=60)
+btn_papel = tk.Button(frame_baixo, width=50, height=50, image=icon_papel, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_papel.place(x=185, y=60)
+
+button_play = tk.Button(frame_baixo, text="Play", width=30, height=1, bg=cor1, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat"
+)
+button_play.place(x=5, y=140)
 
 janela.mainloop()
