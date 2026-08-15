@@ -54,6 +54,17 @@ app_pc_pontos.place(x=180, y=20)
 app_empate = tk.Label(frame_cima, text="", width=225, anchor="center", bg=cor2, fg=cor0, font=("Ivy 10 bold"))
 app_empate.place(x=0, y=95)
 
+#Mostrar jogada PC
+app_jogada_pc = tk.Label(frame_baixo, text="", height=1, anchor="center", bg=cor0, fg=cor1, font=("Ivy 10 bold"))
+app_jogada_pc.place(x=190, y=10)
+
+#Mostrar jogada player
+app_jogada_pessoa = tk.Label(frame_baixo, text="", height=1, anchor="center", bg=cor0, fg=cor1, font=("Ivy 10 bold"))
+app_jogada_pessoa.place(x=10, y=10)
+
+app_vencedor = tk.Label(frame_baixo, text="", height=1, anchor="center", bg=cor0, fg=cor1, font=("Ivy 10 bold"))
+app_vencedor.place(x=5, y=60)
+
 global escolha_pessoa
 global escolha_pc
 global pontos_pessoa
@@ -66,6 +77,20 @@ rodadas = 5
 def end_game():
     pass
 
+def teste_empate(escolha_pessoa, escolha_pc):
+    return escolha_pessoa == escolha_pc
+
+def teste_vitoria_pessoa(escolha_pessoa, escolha_pc):
+    if (escolha_pessoa == "pedra" and escolha_pc == "tesoura") or (escolha_pessoa == "papel" and escolha_pc == "pedra") or (escolha_pessoa == "tesoura" and escolha_pc == "papel"):
+        return True
+    return False
+
+def teste_vitoria_pc(escolha_pessoa, escolha_pc):
+    if (escolha_pc == "pedra" and escolha_pessoa == "tesoura") or (escolha_pc == "papel" and escolha_pessoa == "pedra") or (escolha_pc == "tesoura" and escolha_pessoa == "papel"):
+        return True
+    return False
+
+
 def move(movement):
     global pontos_pessoa
     global pontos_pc
@@ -73,11 +98,29 @@ def move(movement):
 
     opcoes = ["pedra", "papel", "tesoura"]
 
+    app_pessoa_linha["bg"] = cor1
+    app_pc_linha["bg"] = cor1
+    app_empate["bg"] = cor1
+
     if rodadas > 0:
         print(rodadas)
         escolha_pc = random.choice(opcoes)
+        app_jogada_pc["text"] = escolha_pc
+
         escolha_pessoa = movement
-        print(escolha_pessoa, escolha_pc)
+        app_jogada_pessoa["text"] = escolha_pessoa
+
+    #Caso empate
+    if teste_empate(escolha_pessoa, escolha_pc):
+        app_empate["bg"] = cor3
+    elif teste_vitoria_pessoa(escolha_pessoa, escolha_pc):
+        pontos_pessoa += 10
+        app_pessoa_linha["bg"] = cor4
+        app_pc_linha["bg"] = cor5
+    elif teste_vitoria_pc(escolha_pessoa, escolha_pc):
+        pontos_pc += 10
+        app_pc_linha["bg"] = cor4
+        app_pessoa_linha["bg"] = cor5
     else:
         end_game() 
 
