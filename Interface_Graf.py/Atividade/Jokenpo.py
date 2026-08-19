@@ -63,7 +63,7 @@ app_jogada_pessoa = tk.Label(frame_baixo, text="", height=1, anchor="center", bg
 app_jogada_pessoa.place(x=10, y=10)
 
 app_vencedor = tk.Label(frame_baixo, text="", height=1, anchor="center", bg=cor0, fg=cor1, font=("Ivy 10 bold"))
-app_vencedor.place(x=5, y=60)
+app_vencedor.place(x=0, y=40, relwidth=1)
 
 global escolha_pessoa
 global escolha_pc
@@ -75,7 +75,60 @@ pontos_pc = 0
 rodadas = 5
 
 def end_game():
-    pass
+    global rodadas
+    if pontos_pessoa > pontos_pc:
+        app_vencedor["text"] = "Player Venceu!"
+        app_vencedor["fg"] = cor4
+    elif pontos_pc > pontos_pessoa:
+        app_vencedor["text"] = "Computador Venceu!"
+        app_vencedor["fg"] = cor5
+    else:
+        app_vencedor["text"] = "Empate!"
+        app_vencedor["fg"] = cor2
+
+    btn_pedra["state"] = "disabled"
+    btn_papel["state"] = "disabled"
+    btn_tesoura["state"] = "disabled"
+
+def move(movement):
+    global pontos_pessoa
+    global pontos_pc
+    global rodadas
+
+    opcoes = ["pedra", "papel", "tesoura"]
+
+    if rodadas <= 0:
+        end_game()
+        return
+
+    app_pessoa_linha["bg"] = cor1
+    app_pc_linha["bg"] = cor1
+    app_empate["bg"] = cor1
+
+    escolha_pc = random.choice(opcoes)
+    escolha_pessoa = movement
+
+    app_jogada_pc["text"] = escolha_pc
+    app_jogada_pessoa["text"] = escolha_pessoa
+    
+    #Caso empate
+    if teste_empate(escolha_pessoa, escolha_pc):
+        app_empate["bg"] = cor3
+    elif teste_vitoria_pessoa(escolha_pessoa, escolha_pc):
+        pontos_pessoa += 10
+        app_pessoa_linha["bg"] = cor4
+        app_pc_linha["bg"] = cor5
+    elif teste_vitoria_pc(escolha_pessoa, escolha_pc):
+        pontos_pc += 10
+        app_pc_linha["bg"] = cor4
+        app_pessoa_linha["bg"] = cor5
+    app_pessoa_pontos["text"] = pontos_pessoa
+    app_pc_pontos["text"] = pontos_pc
+
+    rodadas -= 1
+
+    if rodadas == 0:
+        end_game()
 
 def teste_empate(escolha_pessoa, escolha_pc):
     return escolha_pessoa == escolha_pc
@@ -91,38 +144,7 @@ def teste_vitoria_pc(escolha_pessoa, escolha_pc):
     return False
 
 
-def move(movement):
-    global pontos_pessoa
-    global pontos_pc
-    global rodadas
 
-    opcoes = ["pedra", "papel", "tesoura"]
-
-    app_pessoa_linha["bg"] = cor1
-    app_pc_linha["bg"] = cor1
-    app_empate["bg"] = cor1
-
-    if rodadas > 0:
-        print(rodadas)
-        escolha_pc = random.choice(opcoes)
-        app_jogada_pc["text"] = escolha_pc
-
-        escolha_pessoa = movement
-        app_jogada_pessoa["text"] = escolha_pessoa
-
-    #Caso empate
-    if teste_empate(escolha_pessoa, escolha_pc):
-        app_empate["bg"] = cor3
-    elif teste_vitoria_pessoa(escolha_pessoa, escolha_pc):
-        pontos_pessoa += 10
-        app_pessoa_linha["bg"] = cor4
-        app_pc_linha["bg"] = cor5
-    elif teste_vitoria_pc(escolha_pessoa, escolha_pc):
-        pontos_pc += 10
-        app_pc_linha["bg"] = cor4
-        app_pessoa_linha["bg"] = cor5
-    else:
-        end_game() 
 
 def start():
     global icon_papel
@@ -131,6 +153,25 @@ def start():
     global btn_papel
     global btn_pedra
     global btn_tesoura
+
+    global pontos_pessoa
+    global pontos_pc
+    global rodadas
+
+    pontos_pessoa = 0
+    pontos_pc = 0
+    rodadas = 5
+
+    app_pessoa_pontos["text"] = 0
+    app_pc_pontos["text"] = 0
+
+    app_vencedor["text"] = ""
+    app_jogada_pessoa["text"] = ""
+    app_jogada_pc["text"] = ""
+
+    app_pessoa_linha["bg"] = cor4
+    app_pc_linha["bg"] = cor5
+    app_empate["bg"] = cor2
 
     #Configuração do frame de baixo
     icon_pedra = Image.open("./images/pedra.png")
@@ -151,10 +192,10 @@ def start():
     btn_papel = tk.Button(frame_baixo, command=lambda: move("papel"), width=50, height=50, image=icon_papel, bg=cor0, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
     btn_papel.place(x=185, y=60)
 
-button_play = tk.Button(frame_baixo, text="Play", command=start, width=25, height=1, bg=cor1, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+button_play = tk.Button(frame_baixo, text="Play", command=start, width=25, height=1, bg=cor4, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
 button_play.place(x=20, y=120)
 
-btn_quit = tk.Button(frame_baixo, text="Sair", command=quit, width=20, height=1, bg=cor1, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
+btn_quit = tk.Button(frame_baixo, text="Sair", command=quit, width=20, height=1, bg=cor5, fg=cor0, compound="center", font=("Ivy 10 bold"), anchor="center", relief="flat")
 btn_quit.place(x=40, y=155)
 
 janela.mainloop()
