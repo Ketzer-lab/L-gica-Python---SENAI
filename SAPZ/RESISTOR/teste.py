@@ -246,4 +246,21 @@ button.grid(
     pady=30
 )
 
+# Label 2
+
+label_in = tk.Label(
+    frame,
+    text="Digite o valor da resistência ou selecione as cores",
+    font=("Helvetica", 10, "bold"),
+    bg="white"
+)
+
+label_in.grid(
+    row=6,
+    column=0,
+    columnspan=4,
+    sticky="w",
+    pady=(0, 10)
+)
+
 root.mainloop()
