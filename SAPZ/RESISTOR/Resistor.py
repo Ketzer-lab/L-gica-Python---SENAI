@@ -6,58 +6,64 @@ from tkinter import Tk, Canvas
 
 def calculo():
 
-    cores_c1 = {
-    "black": 0, 
-    "brown": 1, 
-    "red": 2, 
-    "orange": 3, 
-    "yellow": 4, 
-    "green": 5, 
-    "blue": 6, 
-    "violet": 7, 
-    "gray": 8, 
-    "white": 9
-    }
+    try:
+        cores_c1 = {
+        "black": 0, 
+        "brown": 1, 
+        "red": 2, 
+        "orange": 3, 
+        "yellow": 4, 
+        "green": 5, 
+        "blue": 6, 
+        "violet": 7, 
+        "gray": 8, 
+        "white": 9
+        }
 
-    cores_c2 = {    
-    "brown": 1,
-    "red": 2,
-    "green": 0.5,
-    "blue": 0.25,
-    "violet": 0.1,
-    "gray": 0.05,
-    "gold": 5,
-    "silver": 10
-    }
+        cores_c2 = {    
+        "brown": 1,
+        "red": 2,
+        "green": 0.5,
+        "blue": 0.25,
+        "violet": 0.1,
+        "gray": 0.05,
+        "gold": 5,
+        "silver": 10
+        }
 
-    banda1 = combo1.get()
-    banda2 = combo2.get()
-    multiplicador = combo3.get()
-    tolerancia = combo4.get()
+        banda1 = combo1.get()
+        banda2 = combo2.get()
+        multiplicador = combo3.get()
+        tolerancia = combo4.get()
 
+        if banda1:
+            canvas.itemconfig(Banda1, fill=cores[banda1])
+        if banda2:
+            canvas.itemconfig(Banda2, fill=cores[banda2])
+        if multiplicador:
+            canvas.itemconfig(Multiplicador, fill=cores[multiplicador])
+        if tolerancia:
+            canvas.itemconfig(Tolerancia, fill=cores2[tolerancia])
     
+        cor_1 = cores[banda1]
+        cor_2 = cores[banda2]
+        cor_3 = cores[multiplicador]
+        cor_4 = cores2[tolerancia]
 
-    canvas.itemconfig(Banda1, fill=cores[banda1])
-    canvas.itemconfig(Banda2, fill=cores[banda2])
-    canvas.itemconfig(Multiplicador, fill=cores[multiplicador])
-    canvas.itemconfig(Tolerancia, fill=cores2[tolerancia])
-    
-    cor_1 = cores[banda1]
-    cor_2 = cores[banda2]
-    cor_3 = cores[multiplicador]
-    cor_4 = cores2[tolerancia]
+        resistencia_C = ((cores_c1[cor_1]*10)+cores_c1[cor_2])*(10**cores_c1[cor_3])
+        tolerancia_C = cores_c2[cor_4]
 
-    resistencia_C = ((cores_c1[cor_1]*10)+cores_c1[cor_2])*(10**cores_c1[cor_3])
-    tolerancia_C = cores_c2[cor_4]
+        if resistencia_C < 1000:
+            resultado = f"{resistencia_C} Ω"
+        elif 1000 <= resistencia_C < 1000000:
+            resultado = f"{resistencia_C / 1000} KΩ"
+        elif resistencia_C >= 1000000:
+            resultado = f"{resistencia_C / 1000000} MΩ"
 
-    if resistencia_C < 1000:
-        resultado = f"{resistencia_C} Ω"
-    elif 1000 <= resistencia_C < 1000000:
-        resultado = f"{resistencia_C / 1000} KΩ"
-    elif resistencia_C >= 1000000:
-        resultado = f"{resistencia_C / 1000000} MΩ"
+        label_in.config(text=f"Resistência: {resultado}   Tolerância: ±{tolerancia_C}%")
 
-    label_in.config(text=f"Resistência: {resultado}   Tolerância: ±{tolerancia_C}%")
+    except KeyError:
+        label_in.config(text=f"Por favor preencha todas as caixas!")
 
 
 # Janela Principal
