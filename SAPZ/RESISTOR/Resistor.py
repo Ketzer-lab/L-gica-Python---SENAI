@@ -65,7 +65,6 @@ def calculo():
     except KeyError:
         label_in.config(text=f"Por favor preencha todas as caixas!")
 
-
 # Janela Principal
 
 root = tk.Tk()
@@ -77,13 +76,7 @@ root.resizable(False, False)
 
 # Título
 
-titulo = tk.Label(
-    root,
-    text="Calculadora de Resistor",
-    font=("Helvetica", 22, "bold"),
-    bg="#D9EAF7",
-    fg="#1F3B5B"
-)
+titulo = tk.Label(root, text="Calculadora de Resistor", font=("Helvetica", 22, "bold"), bg="#D9EAF7", fg="#1F3B5B")
 
 titulo.pack(pady=20)
 
@@ -202,34 +195,18 @@ canvas = Canvas(frame, width=500, height=160, bg="white", highlightthickness=0, 
 canvas.grid(row=7, column=0, columnspan=4, pady=(0, 10))
 
 # Corpo do resistor
-base = canvas.create_rectangle(
-    60, 50, 420, 110,
-    fill='light yellow',
-    outline='black'
-)
+base = canvas.create_rectangle(60, 50, 420, 110, fill='light yellow', outline='black')
 
 # Banda 1
-Banda1 = canvas.create_rectangle(
-    130, 50, 160, 110,
-    fill='light yellow'
-)
+Banda1 = canvas.create_rectangle(130, 50, 160, 110, fill='light yellow')
 
 # Banda 2
-Banda2 = canvas.create_rectangle(
-    190, 50, 220, 110,
-    fill='light yellow'
-)
+Banda2 = canvas.create_rectangle(190, 50, 220, 110, fill='light yellow')
 
 # Multiplicador
-Multiplicador = canvas.create_rectangle(
-    250, 50, 280, 110,
-    fill='light yellow'
-)
+Multiplicador = canvas.create_rectangle(250, 50, 280, 110, fill='light yellow')
 
 # Tolerância
-Tolerancia = canvas.create_rectangle(
-    330, 50, 360, 110,
-    fill='light yellow'
-)
+Tolerancia = canvas.create_rectangle(330, 50, 360, 110, fill='light yellow')
 
 root.mainloop()
