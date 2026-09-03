@@ -37,13 +37,13 @@ def calculo():
         tolerancia = combo4.get()
 
         if banda1:
-            canvas.itemconfig(Banda1, fill=cores[banda1])
+            canvas.itemconfig(Banda1, fill=cores[banda1], outline=cores[banda1])
         if banda2:
-            canvas.itemconfig(Banda2, fill=cores[banda2])
+            canvas.itemconfig(Banda2, fill=cores[banda2], outline=cores[banda2])
         if multiplicador:
-            canvas.itemconfig(Multiplicador, fill=cores[multiplicador])
+            canvas.itemconfig(Multiplicador, fill=cores[multiplicador], outline=cores[multiplicador])
         if tolerancia:
-            canvas.itemconfig(Tolerancia, fill=cores2[tolerancia])
+            canvas.itemconfig(Tolerancia, fill=cores2[tolerancia], outline = cores2[tolerancia])
     
         cor_1 = cores[banda1]
         cor_2 = cores[banda2]
@@ -195,18 +195,38 @@ canvas = Canvas(frame, width=500, height=160, bg="white", highlightthickness=0, 
 canvas.grid(row=7, column=0, columnspan=4, pady=(0, 10))
 
 # Corpo do resistor
-base = canvas.create_rectangle(60, 50, 420, 110, fill='light yellow', outline='black')
+base = canvas.create_rectangle(
+    60, 50, 420, 110,
+    fill='light yellow',
+    outline='black'
+)
 
 # Banda 1
-Banda1 = canvas.create_rectangle(130, 50, 160, 110, fill='light yellow')
+Banda1 = canvas.create_rectangle(
+    130, 51, 160, 109,
+    fill='light yellow',
+    outline='light yellow'
+)
 
 # Banda 2
-Banda2 = canvas.create_rectangle(190, 50, 220, 110, fill='light yellow')
+Banda2 = canvas.create_rectangle(
+    190, 51, 220, 109,
+    fill='light yellow',
+    outline='light yellow'
+)
 
 # Multiplicador
-Multiplicador = canvas.create_rectangle(250, 50, 280, 110, fill='light yellow')
+Multiplicador = canvas.create_rectangle(
+    250, 51, 280, 109,
+    fill='light yellow',
+    outline='light yellow'
+)
 
 # Tolerância
-Tolerancia = canvas.create_rectangle(330, 50, 360, 110, fill='light yellow')
+Tolerancia = canvas.create_rectangle(
+    330, 51, 360, 109,
+    fill='light yellow',
+    outline='light yellow'
+)
 
 root.mainloop()
