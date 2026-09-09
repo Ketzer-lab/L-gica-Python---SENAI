@@ -65,7 +65,60 @@ def calculo():
     except KeyError:
         label_in.config(text=f"Por favor preencha todas as caixas!")
 
-# Janela Principal
+def radio_ident():
+
+    if opcao.get() == 2:
+
+        # COMBOBOXES
+
+        combo1 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
+
+        combo1.grid(row=4, column=0, padx=5)
+
+        combo2 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
+
+        combo2.grid(row=4, column=1, padx=5)
+
+        combo3 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
+
+        combo3.grid(row=4, column=2, padx=5)
+
+        combo4 = ttk.Combobox(frame, values=list(cores2.keys()), state="readonly", width=12)
+
+        combo4.grid(row=4, column=3, padx=5)
+
+        # Labels das Bandas
+
+        banda1 = tk.Label(frame, text="Banda 1", font=("Helvetica", 11, "bold"), bg="white")
+
+        banda1.grid(row=3, column=0, pady=(0, 5))
+
+        banda2 = tk.Label(frame, text="Banda 2", font=("Helvetica", 11, "bold"), bg="white"
+        )
+
+        banda2.grid(row=3, column=1, pady=(0, 5))
+
+        multiplicador = tk.Label(frame, text="Multiplicador", font=("Helvetica", 11, "bold"), bg="white")
+
+        multiplicador.grid(row=3, column=2, pady=(0, 5))
+
+        tolerancia = tk.Label(frame, text="Tolerância", font=("Helvetica", 11, "bold"), bg="white")
+
+        tolerancia.grid(row=3, column=3, pady=(0, 5))
+
+        # Botão
+
+        button = tk.Button(frame, text="Calcular Resistência", command=calculo, font=("Helvetica", 12, "bold"), bg="#4CAF50", fg="white", padx=15, pady=8,)
+
+        button.grid(row=5, column=0, columnspan=4, pady=30)
+
+        # Label 2
+
+        label_in = tk.Label(frame, text="Digite o valor da resistência ou selecione as cores", font=("Helvetica", 10, "bold"), bg="white")
+
+        label_in.grid(row=6, column=0, columnspan=4, sticky="w", pady=(0, 10))
+
+        # Janela Principal
 
 root = tk.Tk()
 
@@ -126,7 +179,7 @@ rbutton_v = tk.Radiobutton(frame, text="Valor da resistência", variable=opcao, 
 
 rbutton_v.grid(row=1, column=0, columnspan=2, pady=10)
 
-rbutton_c = tk.Radiobutton(frame, text="Cores do resistor", variable=opcao, value=2, bg="white", font=("Helvetica", 11))
+rbutton_c = tk.Radiobutton(frame, text="Cores do resistor", variable=opcao, command=radio_ident, value=2, bg="white", font=("Helvetica", 11))
 
 rbutton_c.grid(row=1, column=2, columnspan=2, pady=10)
 
@@ -141,55 +194,6 @@ separador.grid(row=2, column=0, columnspan=4, sticky="ew", pady=15)
 for coluna in range(4):
     frame.columnconfigure(coluna, weight=1)
 
-# Labels das Bandas
-
-banda1 = tk.Label(frame, text="Banda 1", font=("Helvetica", 11, "bold"), bg="white")
-
-banda1.grid(row=3, column=0, pady=(0, 5))
-
-banda2 = tk.Label(frame, text="Banda 2", font=("Helvetica", 11, "bold"), bg="white"
-)
-
-banda2.grid(row=3, column=1, pady=(0, 5))
-
-multiplicador = tk.Label(frame, text="Multiplicador", font=("Helvetica", 11, "bold"), bg="white")
-
-multiplicador.grid(row=3, column=2, pady=(0, 5))
-
-tolerancia = tk.Label(frame, text="Tolerância", font=("Helvetica", 11, "bold"), bg="white")
-
-tolerancia.grid(row=3, column=3, pady=(0, 5))
-
-# COMBOBOXES
-
-combo1 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
-
-combo1.grid(row=4, column=0, padx=5)
-
-combo2 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
-
-combo2.grid(row=4, column=1, padx=5)
-
-combo3 = ttk.Combobox(frame, values=list(cores.keys()), state="readonly", width=12)
-
-combo3.grid(row=4, column=2, padx=5)
-
-combo4 = ttk.Combobox(frame, values=list(cores2.keys()), state="readonly", width=12)
-
-combo4.grid(row=4, column=3, padx=5)
-
-# Botão
-
-button = tk.Button(frame, text="Calcular Resistência", command=calculo, font=("Helvetica", 12, "bold"), bg="#4CAF50", fg="white", padx=15, pady=8,)
-
-button.grid(row=5, column=0, columnspan=4, pady=30)
-
-# Label 2
-
-label_in = tk.Label(frame, text="Digite o valor da resistência ou selecione as cores", font=("Helvetica", 10, "bold"), bg="white")
-
-label_in.grid(row=6, column=0, columnspan=4, sticky="w", pady=(0, 10))
-
 # Canvas
 canvas = Canvas(frame, width=500, height=160, bg="white", highlightthickness=0, bd=0)
 canvas.grid(row=7, column=0, columnspan=4, pady=(0, 10))
@@ -198,7 +202,7 @@ canvas.grid(row=7, column=0, columnspan=4, pady=(0, 10))
 base = canvas.create_rectangle(
     60, 50, 420, 110,
     fill='light yellow',
-    outline='black'
+outline='black'
 )
 
 # Banda 1
