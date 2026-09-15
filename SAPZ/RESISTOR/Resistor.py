@@ -262,8 +262,6 @@ separador.grid(row=2, column=0, columnspan=4, sticky="ew", pady=15)
 for coluna in range(4):
     frame.columnconfigure(coluna, weight=1)
 
-
-
 # Canvas
 canvas = Canvas(frame, width=500, height=160, bg="white", highlightthickness=0, bd=0)
 canvas.grid(row=7, column=0, columnspan=4, pady=(0, 10))
