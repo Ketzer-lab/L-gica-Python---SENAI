@@ -3,13 +3,25 @@ from tkinter import ttk
 from tkinter import Tk, Canvas
 import os
 
-
-
 #===============#
 #    FUNÇÕES    #
 #===============#
 
+def limpar_root():
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+def login():
+    login_user = entry_user.get()
+    login_senha = entry_senha.get()
+
+    if login_user == user and login_senha == senha:
+        caixa()
+
 def caixa():
+
+    limpar_root
+
     root.geometry("1000x600")
     root.resizable(False, False)
     root.configure(bg="#04233A")
@@ -21,7 +33,7 @@ def caixa():
     caixa_label.pack(pady=20)
 
     caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
-    
+
     with open(caminho_saldo, "r", encoding="utf-8") as arquivo:
         conteudo = arquivo.read()
 
@@ -41,22 +53,42 @@ def caixa():
 
 
 def sacar():
-    print()
+    limpar_root()
+    root.geometry("500x300")
+    root.resizable(False, False)
+    root.configure(bg="#04233A")
+
+    frame1 = tk.Frame(root, bg="light yellow")
+    frame1.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+
+    frame2 = tk.Frame(frame1, bg="light yellow")
+    frame2.place(relx=0.5, rely=0.5, relwidth=0.9, anchor="center")
+
+    sacar_entry = tk.Entry(frame2, font=("Arial", 20))
+    sacar_entry.pack(fill="x", pady=10)
+
+    sacar_button = tk.Button(frame2, text="SACAR", font=("Arial", 20), command=caixa)
+    sacar_button.pack(fill="x", pady=10)
+
+
 
 def depositar():
-    print()
+    limpar_root()
+    root.geometry("500x300")
+    root.resizable(False, False)
+    root.configure(bg="#04233A")
 
-def limpar_root():
-    for widget in root.winfo_children():
-        widget.destroy()
+    frame1 = tk.Frame(root, bg="light yellow")
+    frame1.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+
+    frame2 = tk.Frame(frame1, bg="light yellow")
+    frame2.place(relx=0.5, rely=0.5, relwidth=0.9, anchor="center")
+
+    depositar_entry = tk.Entry(frame2, font=("Arial", 20))
+    depositar_entry.pack(fill="x", pady=10)
     
-def login():
-    login_user = entry_user.get()
-    login_senha = entry_senha.get()
-
-    if login_user == user and login_senha == senha:
-        limpar_root()
-        caixa()
+    depositar_button = tk.Button(frame2, text="DEPOSITAR", font=("Arial", 20), command=caixa)
+    depositar_button.pack(fill="x", pady=10)
 
 #===============#
 #   Variaveis   #
