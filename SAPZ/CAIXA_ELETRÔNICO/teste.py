@@ -21,20 +21,11 @@ def caixa():
     caixa_label.pack(pady=20)
 
     caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
-
-    caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
-
-    print("CAMINHO:", caminho_saldo)
-
+    
     with open(caminho_saldo, "r", encoding="utf-8") as arquivo:
         conteudo = arquivo.read()
 
-    print("CONTEÚDO LIDO:", repr(conteudo))
-
     numero = conteudo.strip()
-
-    print("NUMERO:", repr(numero))
-
 
     saldo_label = tk.Label(frame, text=f"SALDO\n\nR$ {numero}", font=("Helvetica", 25, "bold"), bg="light yellow")
     saldo_label.pack(pady=20)
