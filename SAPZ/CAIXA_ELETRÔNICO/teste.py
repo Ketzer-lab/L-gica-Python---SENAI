@@ -48,7 +48,7 @@ def caixa():
     button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=depositar, width=35, height=3, bg="#0CA120", fg="white")
     button_cashin.pack(pady=10)
 
-    button_quit = tk.Button(frame, text="SAIR", command=root.destroy(), width=35, height=3, bg="#0CA120", fg="white")
+    button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#0CA120", fg="white")
     button_quit.pack(pady=10)
 
 
