@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Tk, Canvas
+import os
+
+
 
 #===============#
 #    FUNÇÕES    #
@@ -9,25 +12,42 @@ from tkinter import Tk, Canvas
 def caixa():
     root.geometry("1000x600")
     root.resizable(False, False)
+    root.configure(bg="#04233A")
 
-    root.grid_columnconfigure(350)
-    root.grid_rowconfigure(1, minsize=50)
-    root.grid_rowconfigure(3, minsize=40)
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    caixa_label = tk.Label(root, text="CAIXA ELETRÔNICO", font=("Helvetica", 25, "bold"), bg="#04233A", fg="#FFFFFF")
-    caixa_label.grid(row=0, column=0, rowspan=1, sticky="ew")
+    caixa_label = tk.Label(frame, text="CAIXA ELETRÔNICO", font=("Helvetica", 25, "bold"), bg="light yellow", fg="#04233A")
+    caixa_label.pack(pady=20)
 
-    saldo_label = tk.Label(root, text="teste", font=("Helvetica", 25, "bold"), bg="#04233A", fg="#FFFFFF")
-    saldo_label.grid(row=2, column=2, rowspan=1, columnspan=1)
+    caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
 
-    button_cashout = tk.Button(root, text="SACAR DINHEIRO", command=sacar, width=35, height=3, bg="#0CA120", fg="#FFFFFF")
-    button_cashout.grid(row=2, column=0, columnspan=1, sticky="w")
+    caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
 
-    button_cashin = tk.Button(root, text="DEPOSITAR DINHEIRO", command=depositar, width=35, height=3, bg="#0CA120", fg="#FFFFFF")
-    button_cashin.grid(row=4, column=0, rowspan=1, sticky="w")
+    print("CAMINHO:", caminho_saldo)
 
-    button_quit = tk.Button(root, text="SAIR", command=root.destroy, width=35, height=3, bg="#0CA120", fg="#FFFFFF")
-    button_quit.grid(row=10, column=0, columnspan=1, sticky="w")
+    with open(caminho_saldo, "r", encoding="utf-8") as arquivo:
+        conteudo = arquivo.read()
+
+    print("CONTEÚDO LIDO:", repr(conteudo))
+
+    numero = conteudo.strip()
+
+    print("NUMERO:", repr(numero))
+
+
+    saldo_label = tk.Label(frame, text=f"SALDO\n\nR$ {numero}", font=("Helvetica", 25, "bold"), bg="light yellow")
+    saldo_label.pack(pady=20)
+
+    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=sacar, width=35, height=3, bg="#0CA120", fg="white")
+    button_cashout.pack(pady=10)
+
+    button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=depositar, width=35, height=3, bg="#0CA120", fg="white")
+    button_cashin.pack(pady=10)
+
+    button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#0CA120", fg="white")
+    button_quit.pack(pady=10)
+
 
 def sacar():
     print()
@@ -39,7 +59,6 @@ def limpar_root():
     for widget in root.winfo_children():
         widget.destroy()
     
-
 def login():
     login_user = entry_user.get()
     login_senha = entry_senha.get()
