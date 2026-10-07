@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Tk, Canvas
 import os
+from tkinter import messagebox
+
+global sacar_entry
 
 #===============#
 #    FUNÇÕES    #
@@ -15,12 +18,13 @@ def login():
     login_user = entry_user.get()
     login_senha = entry_senha.get()
 
-    if login_user == user and login_senha == senha:
+    if login_user == user and login_senha == "1":
         caixa()
+
 
 def caixa():
 
-    limpar_root
+    limpar_root()
 
     root.geometry("1000x600")
     root.resizable(False, False)
@@ -42,17 +46,53 @@ def caixa():
     saldo_label = tk.Label(frame, text=f"SALDO\n\nR$ {numero}", font=("Helvetica", 25, "bold"), bg="light yellow")
     saldo_label.pack(pady=20)
 
-    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=sacar, width=35, height=3, bg="#0CA120", fg="white")
+    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#0CA120", fg="white")
     button_cashout.pack(pady=10)
 
-    button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=depositar, width=35, height=3, bg="#0CA120", fg="white")
+    button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=b_depositar, width=35, height=3, bg="#0CA120", fg="white")
     button_cashin.pack(pady=10)
 
     button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#0CA120", fg="white")
     button_quit.pack(pady=10)
 
+def depositar():
+    global depositar_entry
 
-def sacar():
+    valor = int(depositar_entry.get())
+    cedulas = [100, 50, 20, 10, 5, 2]
+
+    restante = valor
+
+    for cedula in cedulas:
+        restante %= cedula
+
+    if restante != 0:
+        messagebox.showerror(
+            "Valor inválido",
+            "O depósito deve ser formado apenas por cédulas de:\n"
+            "R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2."
+        )
+        return
+
+    caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
+
+    with open (caminho_saldo, "r") as arq:
+        saldo = int(arq.read())
+
+    saldo += valor
+
+    with open(caminho_saldo, "w") as arq:
+        arq.write(str(saldo))
+
+    messagebox.showinfo(
+        "Depósito",
+        f"Depósito de R$ {valor:.2f} realizado!\n"
+        f"Novo saldo: R$ {saldo:.2f}"
+    )
+
+    caixa()
+
+def b_sacar():
     limpar_root()
     root.geometry("500x300")
     root.resizable(False, False)
@@ -72,7 +112,9 @@ def sacar():
 
 
 
-def depositar():
+def b_depositar():
+    global depositar_entry
+
     limpar_root()
     root.geometry("500x300")
     root.resizable(False, False)
@@ -87,7 +129,7 @@ def depositar():
     depositar_entry = tk.Entry(frame2, font=("Arial", 20))
     depositar_entry.pack(fill="x", pady=10)
     
-    depositar_button = tk.Button(frame2, text="DEPOSITAR", font=("Arial", 20), command=caixa)
+    depositar_button = tk.Button(frame2, text="DEPOSITAR", font=("Arial", 20), command=depositar)
     depositar_button.pack(fill="x", pady=10)
 
 #===============#
