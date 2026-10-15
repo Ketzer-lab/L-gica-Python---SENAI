@@ -46,14 +46,100 @@ def caixa():
     saldo_label = tk.Label(frame, text=f"SALDO\n\nR$ {numero}", font=("Helvetica", 25, "bold"), bg="light yellow")
     saldo_label.pack(pady=20)
 
-    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#0CA120", fg="white")
-    button_cashout.pack(pady=10)
-
     button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=b_depositar, width=35, height=3, bg="#0CA120", fg="white")
     button_cashin.pack(pady=10)
 
-    button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#0CA120", fg="white")
+    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#E09625", fg="white")
+    button_cashout.pack(pady=10)
+
+    button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#F31313", fg="white")
     button_quit.pack(pady=10)
+
+def sacar():
+    global sacar_entry
+
+    try:
+        valor = int(sacar_entry.get())
+    except ValueError:
+        messagebox.showerror(
+            "Valor inválido",
+            "Digite um valor inteiro para o saque."
+        )
+        return
+
+    cedulas = [100, 50, 20, 10, 5, 2]
+
+    if valor <= 0:
+        messagebox.showerror(
+            "Valor inválido",
+            "Digite um valor maior que zero."
+        )
+        return
+
+    # Verifica se o valor pode ser formado pelas cédulas
+    possiveis = [False] * (valor + 1)
+    possiveis[0] = True
+
+    for quantia in range(1, valor + 1):
+        for cedula in cedulas:
+            if quantia >= cedula and possiveis[quantia - cedula]:
+                possiveis[quantia] = True
+                break
+
+    if not possiveis[valor]:
+        messagebox.showerror(
+            "Valor inválido",
+            "O saque deve ser formado apenas por cédulas de:\n"
+            "R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2."
+        )
+        return
+
+    caminho_saldo = os.path.join(
+        os.path.dirname(__file__), "SALDO.txt"
+    )
+
+    with open(caminho_saldo, "r", encoding="utf-8") as arq:
+        saldo = int(arq.read().strip())
+
+    if valor > saldo:
+        messagebox.showerror(
+            "Saldo insuficiente",
+            f"Seu saldo atual é de R$ {saldo:.2f}."
+        )
+        return
+
+    # Calcula as cédulas utilizadas no saque
+    usadas = {cedula: 0 for cedula in cedulas}
+    restante = valor
+
+    while restante > 0:
+        for cedula in cedulas:
+            if restante >= cedula and possiveis[restante - cedula]:
+                usadas[cedula] += 1
+                restante -= cedula
+                break
+
+    # Monta a lista de cédulas
+    lista_cedulas = ""
+
+    for cedula, quantidade in usadas.items():
+        if quantidade > 0:
+            lista_cedulas += f"{quantidade}x R$ {cedula:.2f}\n"
+
+    # Atualiza o saldo
+    saldo -= valor
+
+    with open(caminho_saldo, "w", encoding="utf-8") as arq:
+        arq.write(str(saldo))
+
+    messagebox.showinfo(
+        "Saque",
+        f"Saque de R$ {valor:.2f} realizado!\n\n"
+        f"Cédulas sacadas:\n{lista_cedulas}\n"
+        f"Saldo restante: R$ {saldo:.2f}"
+    )
+
+    caixa()
 
 def depositar():
     global depositar_entry
@@ -61,12 +147,24 @@ def depositar():
     valor = int(depositar_entry.get())
     cedulas = [100, 50, 20, 10, 5, 2]
 
-    restante = valor
+    if valor <= 0:
+        messagebox.showerror(
+            "Valor inválido",
+            "Digite um valor maior que zero."
+        )
+        return
 
-    for cedula in cedulas:
-        restante %= cedula
+    # Verifica se existe uma combinação válida
+    possiveis = [False] * (valor + 1)
+    possiveis[0] = True
 
-    if restante != 0:
+    for quantia in range(1, valor + 1):
+        for cedula in cedulas:
+            if quantia >= cedula and possiveis[quantia - cedula]:
+                possiveis[quantia] = True
+                break
+
+    if not possiveis[valor]:
         messagebox.showerror(
             "Valor inválido",
             "O depósito deve ser formado apenas por cédulas de:\n"
@@ -74,9 +172,34 @@ def depositar():
         )
         return
 
-    caminho_saldo = os.path.join(os.path.dirname(__file__), "SALDO.txt")
+    # Descobre quais cédulas serão utilizadas
+    usadas = {}
+    restante = valor
 
-    with open (caminho_saldo, "r") as arq:
+    for cedula in cedulas:
+        usadas[cedula] = 0
+
+    while restante > 0:
+        for cedula in cedulas:
+            if restante >= cedula and possiveis[restante - cedula]:
+                usadas[cedula] += 1
+                restante -= cedula
+                break
+
+    # Monta a lista de cédulas para a mensagem
+    lista_cedulas = ""
+
+    for cedula, quantidade in usadas.items():
+        if quantidade > 0:
+            lista_cedulas += (
+                f"{quantidade}x R$ {cedula:.2f}\n"
+            )
+
+    caminho_saldo = os.path.join(
+        os.path.dirname(__file__), "SALDO.txt"
+    )
+
+    with open(caminho_saldo, "r") as arq:
         saldo = int(arq.read())
 
     saldo += valor
@@ -86,28 +209,43 @@ def depositar():
 
     messagebox.showinfo(
         "Depósito",
-        f"Depósito de R$ {valor:.2f} realizado!\n"
+        f"Depósito de R$ {valor:.2f} realizado!\n\n"
+        f"Cédulas depositadas:\n{lista_cedulas}\n"
         f"Novo saldo: R$ {saldo:.2f}"
     )
 
     caixa()
 
 def b_sacar():
+    global sacar_entry  # Adicione esta linha
+
     limpar_root()
     root.geometry("500x300")
     root.resizable(False, False)
     root.configure(bg="#04233A")
 
     frame1 = tk.Frame(root, bg="light yellow")
-    frame1.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+    frame1.place(
+        relx=0.5, rely=0.5,
+        relwidth=0.95, relheight=0.9,
+        anchor="center"
+    )
 
     frame2 = tk.Frame(frame1, bg="light yellow")
-    frame2.place(relx=0.5, rely=0.5, relwidth=0.9, anchor="center")
+    frame2.place(
+        relx=0.5, rely=0.5,
+        relwidth=0.9, anchor="center"
+    )
 
     sacar_entry = tk.Entry(frame2, font=("Arial", 20))
     sacar_entry.pack(fill="x", pady=10)
 
-    sacar_button = tk.Button(frame2, text="SACAR", font=("Arial", 20), command=caixa)
+    sacar_button = tk.Button(
+        frame2,
+        text="SACAR",
+        font=("Arial", 20),
+        command=sacar  # Chama a função de saque
+    )
     sacar_button.pack(fill="x", pady=10)
 
 
