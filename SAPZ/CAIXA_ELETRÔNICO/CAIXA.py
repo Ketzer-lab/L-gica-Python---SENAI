@@ -1,10 +1,78 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import Tk, Canvas
-import os
 from tkinter import messagebox
+import os
 
-global sacar_entry
+#===============#
+#   VARIÁVEIS   #
+#===============#
+
+caminho_saldo = os.path.join(os.path.dirname(os.path.abspath(__file__)), "SALDO.txt")
+usuario_logado = None
+SALDO_INICIAL = 1000
+
+
+#=======================#
+#   ARQUIVO DE CONTAS   #
+#=======================#
+
+def carregar_contas():
+    contas = {}
+
+    if os.path.exists(caminho_saldo):
+        with open(caminho_saldo, "r", encoding="utf-8") as arquivo:
+            linhas = arquivo.readlines()
+
+        for linha in linhas:
+            partes = linha.strip().split(",")
+
+            if len(partes) == 3:
+                nome, senha, saldo = partes
+                try:
+                    contas[nome] = {"senha": senha, "saldo": int(saldo)}
+                except ValueError:
+                    continue
+
+            elif len(partes) == 1 and partes[0].isdigit():
+                # Migra o saldo do formato antigo para a conta user
+                contas["user"] = {"senha": "1", "saldo": int(partes[0])}
+
+    if "user" not in contas:
+        contas["user"] = {"senha": "1", "saldo": SALDO_INICIAL}
+
+    salvar_contas(contas)
+    return contas
+
+
+def salvar_contas(contas):
+    with open(caminho_saldo, "w", encoding="utf-8") as arquivo:
+        for nome, dados in contas.items():
+            arquivo.write(f"{nome},{dados['senha']},{dados['saldo']}\n")
+
+
+def criar_conta():
+    nome = entry_novo_usuario.get().strip()
+    senha = entry_nova_senha.get()
+
+    if not nome or not senha:
+        messagebox.showerror("Erro", "Preencha o usuário e a senha.")
+        return
+
+    if "," in nome or "," in senha or "\n" in nome or "\n" in senha:
+        messagebox.showerror("Erro", "Não use vírgulas ou quebras de linha no usuário ou na senha.")
+        return
+
+    contas = carregar_contas()
+
+    if nome in contas:
+        messagebox.showerror("Erro", "Esse usuário já existe. Escolha outro nome.")
+        return
+
+    contas[nome] = {"senha": senha, "saldo": SALDO_INICIAL}
+    salvar_contas(contas)
+
+    messagebox.showinfo("Conta criada", f"Conta de {nome} criada com sucesso!\nSaldo inicial: R$ {SALDO_INICIAL:.2f}")
+    tela_login()
+
 
 #===============#
 #    FUNÇÕES    #
@@ -16,21 +84,21 @@ def limpar_root():
 
 
 def login():
-    login_user = entry_user.get()
-    login_senha = entry_senha.get()
+    global usuario_logado
 
-    if login_user == user and login_senha == "1":
+    nome = entry_user.get().strip()
+    senha = entry_senha.get()
+    contas = carregar_contas()
+
+    if nome in contas and contas[nome]["senha"] == senha:
+        usuario_logado = nome
         caixa()
     else:
-        messagebox.showerror(
-            "Login inválido",
-            "Usuário ou senha incorretos."
-        )
+        messagebox.showerror("Login inválido", "Usuário ou senha incorretos.")
 
 
 def caixa():
     limpar_root()
-
     root.geometry("1000x600")
     root.resizable(False, False)
     root.configure(bg="#04233A")
@@ -38,55 +106,38 @@ def caixa():
     frame = tk.Frame(root, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    caixa_label = tk.Label(frame, text="CAIXA ELETRÔNICO", font=("Helvetica", 25, "bold"), bg="light yellow", fg="#04233A")
-    caixa_label.pack(pady=20)
+    tk.Label(frame, text=f"CAIXA ELETRÔNICO\nUsuário: {usuario_logado}", font=("Helvetica", 25, "bold"), bg="light yellow", fg="#04233A").pack(pady=20)
 
-    caminho_saldo = os.path.join(
-        os.path.dirname(__file__), "SALDO.txt"
-    )
+    saldo = carregar_contas()[usuario_logado]["saldo"]
+    tk.Label(frame, text=f"SALDO\n\nR$ {saldo:.2f}", font=("Helvetica", 25, "bold"), bg="light yellow").pack(pady=20)
 
-    with open(caminho_saldo, "r", encoding="utf-8") as arquivo:
-        conteudo = arquivo.read()
-
-    numero = conteudo.strip()
-
-    saldo_label = tk.Label(frame, text=f"SALDO\n\nR$ {numero}", font=("Helvetica", 25, "bold"), bg="light yellow")
-    saldo_label.pack(pady=20)
-
-    button_cashin = tk.Button(frame, text="DEPOSITAR DINHEIRO", command=b_depositar, width=35, height=3, bg="#0CA120", fg="white")
-    button_cashin.pack(pady=10)
-
-    button_cashout = tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#E09625", fg="white")
-    button_cashout.pack(pady=10)
-
-    button_quit = tk.Button(frame, text="SAIR", command=root.destroy, width=35, height=3, bg="#F31313", fg="white")
-    button_quit.pack(pady=10)
+    tk.Button(frame, text="DEPOSITAR DINHEIRO", command=b_depositar, width=35, height=3, bg="#0CA120", fg="white").pack(pady=10)
+    tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#E09625", fg="white").pack(pady=10)
+    tk.Button(frame, text="SAIR", command=tela_login, width=35, height=3, bg="#F31313", fg="white").pack(pady=10)
 
 
-def sacar():
-    global sacar_entry
+def validar_valor(entrada, operacao):
+    entrada = entrada.strip()
 
-    entrada = sacar_entry.get().strip()
-
-    # Verifica se o valor contém vírgula ou ponto
     if "," in entrada or "." in entrada:
-        messagebox.showerror("Valor inválido", "Não é permitido usar vírgula ou ponto.\n" "Digite um valor inteiro, por exemplo: 50.")
-        return
+        messagebox.showerror("Valor inválido", "Não é permitido usar vírgula ou ponto.\nDigite um valor inteiro, por exemplo: 50.")
+        return None
 
-    # Verifica se o valor é um número inteiro
     try:
         valor = int(entrada)
     except ValueError:
-        messagebox.showerror("Valor inválido", "Digite um valor inteiro válido para o saque.")
-        return
-
-    cedulas = [100, 50, 20, 10, 5, 2]
+        messagebox.showerror("Valor inválido", f"Digite um valor inteiro válido para o {operacao}.")
+        return None
 
     if valor <= 0:
         messagebox.showerror("Valor inválido", "Digite um valor maior que zero.")
-        return
+        return None
 
-    # Verifica se o valor pode ser formado pelas cédulas
+    return valor
+
+
+def calcular_cedulas(valor):
+    cedulas = [100, 50, 20, 10, 5, 2]
     possiveis = [False] * (valor + 1)
     possiveis[0] = True
 
@@ -97,21 +148,8 @@ def sacar():
                 break
 
     if not possiveis[valor]:
-        messagebox.showerror("Valor inválido", "O saque deve ser formado apenas por cédulas de:\n" "R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2.")
-        return
+        return None
 
-    caminho_saldo = os.path.join(
-        os.path.dirname(__file__), "SALDO.txt"
-    )
-
-    with open(caminho_saldo, "r", encoding="utf-8") as arq:
-        saldo = int(arq.read().strip())
-
-    if valor > saldo:
-        messagebox.showerror("Saldo insuficiente", f"Seu saldo atual é de R$ {saldo:.2f}.")
-        return
-
-    # Calcula as cédulas utilizadas no saque
     usadas = {cedula: 0 for cedula in cedulas}
     restante = valor
 
@@ -122,99 +160,56 @@ def sacar():
                 restante -= cedula
                 break
 
-    # Monta a lista de cédulas
-    lista_cedulas = ""
+    return usadas
 
-    for cedula, quantidade in usadas.items():
-        if quantidade > 0:
-            lista_cedulas += f"{quantidade}x R$ {cedula:.2f}\n"
 
-    # Atualiza o saldo
+def formatar_cedulas(usadas):
+    return "".join(f"{quantidade}x R$ {cedula:.2f}\n" for cedula, quantidade in usadas.items() if quantidade > 0)
+
+
+def sacar():
+    valor = validar_valor(sacar_entry.get(), "saque")
+    if valor is None:
+        return
+
+    usadas = calcular_cedulas(valor)
+
+    if usadas is None:
+        messagebox.showerror("Valor inválido", "O saque deve usar cédulas de R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2.")
+        return
+
+    contas = carregar_contas()
+    saldo = contas[usuario_logado]["saldo"]
+
+    if valor > saldo:
+        messagebox.showerror("Saldo insuficiente", f"Seu saldo atual é de R$ {saldo:.2f}.")
+        return
+
     saldo -= valor
+    contas[usuario_logado]["saldo"] = saldo
+    salvar_contas(contas)
 
-    with open(caminho_saldo, "w", encoding="utf-8") as arq:
-        arq.write(str(saldo))
-
-    messagebox.showinfo("Saque", f"Saque de R$ {valor:.2f} realizado!\n\n" f"Cédulas sacadas:\n{lista_cedulas}\n" f"Saldo restante: R$ {saldo:.2f}")
-
+    messagebox.showinfo("Saque", f"Saque de R$ {valor:.2f} realizado!\n\nCédulas sacadas:\n{formatar_cedulas(usadas)}Saldo restante: R$ {saldo:.2f}")
     caixa()
 
 
 def depositar():
-    global depositar_entry
-
-    entrada = depositar_entry.get().strip()
-
-    # Verifica se o valor contém vírgula ou ponto
-    if "," in entrada or "." in entrada:
-        messagebox.showerror("Valor inválido", "Não é permitido usar vírgula ou ponto.\n" "Digite um valor inteiro, por exemplo: 50.")
+    valor = validar_valor(depositar_entry.get(), "depósito")
+    if valor is None:
         return
 
-    # Verifica se o valor é um número inteiro
-    try:
-        valor = int(entrada)
-    except ValueError:
-        messagebox.showerror("Valor inválido", "Digite um valor inteiro válido para o depósito.")
+    usadas = calcular_cedulas(valor)
+
+    if usadas is None:
+        messagebox.showerror("Valor inválido", "O depósito deve usar cédulas de R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2.")
         return
 
-    cedulas = [100, 50, 20, 10, 5, 2]
+    contas = carregar_contas()
+    saldo = contas[usuario_logado]["saldo"] + valor
+    contas[usuario_logado]["saldo"] = saldo
+    salvar_contas(contas)
 
-    if valor <= 0:
-        messagebox.showerror("Valor inválido", "Digite um valor maior que zero.")
-        return
-
-    # Verifica se existe uma combinação válida
-    possiveis = [False] * (valor + 1)
-    possiveis[0] = True
-
-    for quantia in range(1, valor + 1):
-        for cedula in cedulas:
-            if quantia >= cedula and possiveis[quantia - cedula]:
-                possiveis[quantia] = True
-                break
-
-    if not possiveis[valor]:
-        messagebox.showerror("Valor inválido", "O depósito deve ser formado apenas por cédulas de:\n" "R$ 100, R$ 50, R$ 20, R$ 10, R$ 5 e R$ 2.")
-        return
-
-    # Descobre quais cédulas serão utilizadas
-    usadas = {}
-
-    for cedula in cedulas:
-        usadas[cedula] = 0
-
-    restante = valor
-
-    while restante > 0:
-        for cedula in cedulas:
-            if restante >= cedula and possiveis[restante - cedula]:
-                usadas[cedula] += 1
-                restante -= cedula
-                break
-
-    # Monta a lista de cédulas para a mensagem
-    lista_cedulas = ""
-
-    for cedula, quantidade in usadas.items():
-        if quantidade > 0:
-            lista_cedulas += (
-                f"{quantidade}x R$ {cedula:.2f}\n"
-            )
-
-    caminho_saldo = os.path.join(
-        os.path.dirname(__file__), "SALDO.txt"
-    )
-
-    with open(caminho_saldo, "r", encoding="utf-8") as arq:
-        saldo = int(arq.read().strip())
-
-    saldo += valor
-
-    with open(caminho_saldo, "w", encoding="utf-8") as arq:
-        arq.write(str(saldo))
-
-    messagebox.showinfo("Depósito", f"Depósito de R$ {valor:.2f} realizado!\n\n" f"Cédulas depositadas:\n{lista_cedulas}\n" f"Novo saldo: R$ {saldo:.2f}")
-
+    messagebox.showinfo("Depósito", f"Depósito de R$ {valor:.2f} realizado!\n\nCédulas depositadas:\n{formatar_cedulas(usadas)}Novo saldo: R$ {saldo:.2f}")
     caixa()
 
 
@@ -222,53 +217,88 @@ def b_sacar():
     global sacar_entry
 
     limpar_root()
-
     root.geometry("500x300")
-    root.resizable(False, False)
     root.configure(bg="#04233A")
 
-    frame1 = tk.Frame(root, bg="light yellow")
-    frame1.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    frame2 = tk.Frame(frame1, bg="light yellow")
-    frame2.place(relx=0.5, rely=0.5, relwidth=0.9, anchor="center")
+    sacar_entry = tk.Entry(frame, font=("Arial", 20))
+    sacar_entry.pack(fill="x", padx=20, pady=20)
 
-    sacar_entry = tk.Entry(frame2, font=("Arial", 20))
-    sacar_entry.pack(fill="x", pady=10)
-
-    sacar_button = tk.Button(frame2, text="SACAR", font=("Arial", 20), command=sacar)
-    sacar_button.pack(fill="x", pady=10)
+    tk.Button(frame, text="SACAR", font=("Arial", 20), command=sacar).pack(fill="x", padx=20, pady=5)
+    tk.Button(frame, text="VOLTAR", command=caixa).pack(pady=5)
 
 
 def b_depositar():
     global depositar_entry
 
     limpar_root()
-
     root.geometry("500x300")
-    root.resizable(False, False)
     root.configure(bg="#04233A")
 
-    frame1 = tk.Frame(root, bg="light yellow")
-    frame1.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center"
-)
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    frame2 = tk.Frame(frame1, bg="light yellow")
-    frame2.place(relx=0.5, rely=0.5, relwidth=0.9, anchor="center")
+    depositar_entry = tk.Entry(frame, font=("Arial", 20))
+    depositar_entry.pack(fill="x", padx=20, pady=20)
 
-    depositar_entry = tk.Entry(frame2, font=("Arial", 20))
-    depositar_entry.pack(fill="x", pady=10)
-
-    depositar_button = tk.Button(frame2, text="DEPOSITAR", font=("Arial", 20), command=depositar)
-    depositar_button.pack(fill="x", pady=10)
+    tk.Button(frame, text="DEPOSITAR", font=("Arial", 20), command=depositar).pack(fill="x", padx=20, pady=5)
+    tk.Button(frame, text="VOLTAR", command=caixa).pack(pady=5)
 
 
-#===============#
-#   VARIÁVEIS   #
-#===============#
+#=======================#
+#   TELAS DE ACESSO     #
+#=======================#
 
-user = "user"
-senha = "senha"
+def tela_login():
+    global entry_user, entry_senha
+
+    limpar_root()
+    root.geometry("350x450")
+    root.resizable(False, False)
+    root.configure(bg="#04233A")
+    root.grid_columnconfigure(0, weight=1)
+
+    tk.Label(root, text="BEM VINDO AO\nCAIXA ELETRÔNICO", font=("Helvetica", 20, "bold"), bg="#04233A", fg="white").grid(row=0, column=0, pady=15)
+    tk.Label(root, text="Usuário:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="white").grid(row=1, column=0, pady=5)
+
+    entry_user = tk.Entry(root, width=25)
+    entry_user.grid(row=2, column=0, ipady=8)
+
+    tk.Label(root, text="Senha:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="white").grid(row=3, column=0, pady=5)
+
+    entry_senha = tk.Entry(root, width=25, show="*")
+    entry_senha.grid(row=4, column=0, ipady=8)
+
+    tk.Button(root, text="ENTRAR", command=login, width=25, height=2, bg="#0CA120", fg="white").grid(row=5, column=0, pady=12)
+    tk.Button(root, text="CRIAR CONTA", command=tela_criar_conta, width=25, height=2, bg="#2471A3", fg="white").grid(row=6, column=0, pady=5)
+    tk.Button(root, text="SAIR", command=root.destroy, width=25, height=2, bg="#F31313", fg="white").grid(row=7, column=0, pady=5)
+
+
+def tela_criar_conta():
+    global entry_novo_usuario, entry_nova_senha
+
+    limpar_root()
+    root.geometry("400x400")
+    root.configure(bg="#04233A")
+
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.9, anchor="center")
+
+    tk.Label(frame, text="CRIAR CONTA", font=("Helvetica", 22, "bold"), bg="light yellow", fg="#04233A").pack(pady=20)
+    tk.Label(frame, text="Novo usuário:", font=("Arial", 14), bg="light yellow").pack(pady=5)
+
+    entry_novo_usuario = tk.Entry(frame, font=("Arial", 16))
+    entry_novo_usuario.pack(padx=20, fill="x")
+
+    tk.Label(frame, text="Nova senha:", font=("Arial", 14), bg="light yellow").pack(pady=5)
+
+    entry_nova_senha = tk.Entry(frame, font=("Arial", 16), show="*")
+    entry_nova_senha.pack(padx=20, fill="x")
+
+    tk.Button(frame, text="CRIAR CONTA", command=criar_conta, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
+    tk.Button(frame, text="VOLTAR", command=tela_login, width=25).pack()
 
 
 #=======================#
@@ -278,49 +308,7 @@ senha = "senha"
 root = tk.Tk()
 root.title("SAPZ - Caixa Eletrônico")
 root.config(bg="#04233A")
-root.geometry("350x450")
-root.resizable(False, False)
 
-
-#===========#
-#   LABELS  #
-#===========#
-
-root.grid_columnconfigure(0, weight=1)
-root.grid_rowconfigure(1, minsize=20)
-root.grid_rowconfigure(4, minsize=20)
-root.grid_rowconfigure(7, minsize=40)
-root.grid_rowconfigure(9, minsize=20)
-
-bem_vindo = tk.Label(root, text="BEM VINDO AO \nCAIXA ELETRÔNICO", font=("Helvetica", 20, "bold"), bg="#04233A", fg="#FFFFFF")
-bem_vindo.grid(row=0, column=0, columnspan=1, sticky="ew")
-
-user_label = tk.Label(root, text="Usuário:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="#FFFFFF")
-user_label.grid(row=2, column=0, columnspan=1, sticky="ew")
-
-senha_label = tk.Label(root, text="Senha:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="#FFFFFF")
-senha_label.grid(row=5, column=0, columnspan=1, sticky="ew")
-
-
-#=======================#
-#   CAIXAS DE TEXTO     #
-#=======================#
-
-entry_user = tk.Entry(root, width=25)
-entry_user.grid(row=3, column=0, columnspan=1, ipady=10)
-
-entry_senha = tk.Entry(root, width=25, show="*")
-entry_senha.grid(row=6, column=0, columnspan=1, ipady=10)
-
-
-#===========#
-#   BOTÕES  #
-#===========#
-
-button_login = tk.Button(root, text="ENTRAR", command=login, width=25, height=2, bg="#0CA120", fg="#FFFFFF")
-button_login.grid(row=8, column=0, columnspan=1)
-
-button_quit = tk.Button(root, text="SAIR", command=root.destroy, width=25, height=2, bg="#0CA120", fg="#FFFFFF")
-button_quit.grid(row=10, column=0, columnspan=1)
-
+carregar_contas()
+tela_login()
 root.mainloop()
