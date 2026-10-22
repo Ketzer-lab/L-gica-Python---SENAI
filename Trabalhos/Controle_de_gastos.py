@@ -83,6 +83,12 @@ def criar_conta():
     messagebox.showinfo("Conta criada", f"Conta de {nome} criada com sucesso!\nSaldo inicial: R$ {SALDO_INICIAL:.2f}")
     tela_login()
 
+def b_depositar():
+    messagebox.showinfo("Depósito", "Função de depósito ainda não implementada.")
+
+def b_sacar():
+    messagebox.showinfo("Saque", "Função de saque ainda não implementada.")
+
 #=======================#
 #   TELAS DE ACESSO     #
 #=======================#
@@ -140,19 +146,88 @@ def controle():
     limpar_root()
     root.geometry("1000x600")
     root.resizable(False, False)
-    root.configure(bg="#EFF0B8")
+    root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    tk.Label(frame, text=f"CONTROLE DE GASTOS\nUsuário: {usuario_logado}", font=("Helvetica", 25, "bold"), bg="light yellow", fg="black").pack(pady=20)
+    # Label principal
+    tk.Label(
+        frame,
+        text=f"CAIXA ELETRÔNICO\nUsuário: {usuario_logado}",
+        font=("Helvetica", 25, "bold"),
+        bg="light yellow",
+        fg="#04233A"
+    ).pack(pady=20)
+
+    # Área para organizar os controles
+    conteudo = tk.Frame(frame, bg="light yellow")
+    conteudo.pack(fill="both", expand=True, padx=20, pady=10)
+
+    conteudo.grid_columnconfigure(0, weight=1)
+    conteudo.grid_columnconfigure(1, weight=1)
+    conteudo.grid_rowconfigure(0, weight=1)
+
+    # Lado esquerdo: botões
+    frame_botoes = tk.Frame(conteudo, bg="light yellow")
+    frame_botoes.grid(row=0, column=0, sticky="nsew", padx=20, pady=10)
+
+    tk.Button(
+        frame_botoes,
+        text="DEPOSITAR DINHEIRO",
+        command=b_depositar,
+        width=30,
+        height=3,
+        bg="#0CA120",
+        fg="white"
+    ).pack(pady=12)
+
+    tk.Button(
+        frame_botoes,
+        text="SACAR DINHEIRO",
+        command=b_sacar,
+        width=30,
+        height=3,
+        bg="#E09625",
+        fg="white"
+    ).pack(pady=12)
+
+    tk.Button(
+        frame_botoes,
+        text="SAIR",
+        command=tela_login,
+        width=30,
+        height=3,
+        bg="#F31313",
+        fg="white"
+    ).pack(pady=12)
+
+    # Lado direito: saldo
+    frame_saldo = tk.Frame(
+        conteudo,
+        bg="white",
+        relief="groove",
+        bd=2
+    )
+    frame_saldo.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
 
     saldo = carregar_contas()[usuario_logado]["saldo"]
-    tk.Label(frame, text=f"SALDO\n\nR$ {saldo:.2f}", font=("Helvetica", 25, "bold"), bg="light yellow").pack(pady=20)
 
-    tk.Button(frame, text="DEPOSITAR DINHEIRO", width=35, height=3, bg="#0CA120", fg="white").pack(pady=10)
-    tk.Button(frame, text="SACAR DINHEIRO", width=35, height=3, bg="#E09625", fg="white").pack(pady=10)
-    tk.Button(frame, text="SAIR", command=tela_login, width=35, height=3, bg="#F31313", fg="white").pack(pady=10)
+    tk.Label(
+        frame_saldo,
+        text="SALDO DISPONÍVEL",
+        font=("Helvetica", 20, "bold"),
+        bg="white",
+        fg="#04233A"
+    ).pack(pady=(70, 20))
+
+    tk.Label(
+        frame_saldo,
+        text=f"R$ {saldo:.2f}",
+        font=("Helvetica", 30, "bold"),
+        bg="white",
+        fg="#0CA120"
+    ).pack(pady=20)
 
 #==========================#
 #     Janela Principal     #

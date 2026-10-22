@@ -3,6 +3,10 @@
         "user": {
             "senha": "1",
             "saldo": 0
+        },
+        "Leonardo": {
+            "senha": "123",
+            "saldo": 0
         }
     }
 }
