@@ -93,16 +93,16 @@ def tela_login():
     limpar_root()
     root.geometry("350x450")
     root.resizable(False, False)
-    root.configure(bg="#04233A")
+    root.configure(bg="#EFF0B8")
     root.grid_columnconfigure(0, weight=1)
 
-    tk.Label(root, text="BEM VINDO AO\nCAIXA ELETRÔNICO", font=("Helvetica", 20, "bold"), bg="#04233A", fg="white").grid(row=0, column=0, pady=15)
-    tk.Label(root, text="Usuário:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="white").grid(row=1, column=0, pady=5)
+    tk.Label(root, text="BEM VINDO AO\nCONTROLE DE GASTOS", font=("Helvetica", 20, "bold"), bg="#EFF0B8", fg="black").grid(row=0, column=0, pady=15)
+    tk.Label(root, text="Usuário:", font=("Helvetica", 17, "bold"), bg="#EFF0B8", fg="black").grid(row=1, column=0, pady=5)
 
     entry_user = tk.Entry(root, width=25)
     entry_user.grid(row=2, column=0, ipady=8)
 
-    tk.Label(root, text="Senha:", font=("Helvetica", 17, "bold"), bg="#04233A", fg="white").grid(row=3, column=0, pady=5)
+    tk.Label(root, text="Senha:", font=("Helvetica", 17, "bold"), bg="#EFF0B8", fg="black").grid(row=3, column=0, pady=5)
 
     entry_senha = tk.Entry(root, width=25, show="*")
     entry_senha.grid(row=4, column=0, ipady=8)
@@ -117,12 +117,12 @@ def tela_criar_conta():
 
     limpar_root()
     root.geometry("400x400")
-    root.configure(bg="#04233A")
+    root.configure(bg="#EFF0B8")
 
     frame = tk.Frame(root, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.9, anchor="center")
 
-    tk.Label(frame, text="CRIAR CONTA", font=("Helvetica", 22, "bold"), bg="light yellow", fg="#04233A").pack(pady=20)
+    tk.Label(frame, text="CRIAR CONTA", font=("Helvetica", 22, "bold"), bg="light yellow", fg="black").pack(pady=20)
     tk.Label(frame, text="Novo usuário:", font=("Arial", 14), bg="light yellow").pack(pady=5)
 
     entry_novo_usuario = tk.Entry(frame, font=("Arial", 16))
@@ -140,18 +140,18 @@ def controle():
     limpar_root()
     root.geometry("1000x600")
     root.resizable(False, False)
-    root.configure(bg="#04233A")
+    root.configure(bg="#EFF0B8")
 
     frame = tk.Frame(root, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    tk.Label(frame, text=f"CAIXA ELETRÔNICO\nUsuário: {usuario_logado}", font=("Helvetica", 25, "bold"), bg="light yellow", fg="#04233A").pack(pady=20)
+    tk.Label(frame, text=f"CONTROLE DE GASTOS\nUsuário: {usuario_logado}", font=("Helvetica", 25, "bold"), bg="light yellow", fg="black").pack(pady=20)
 
     saldo = carregar_contas()[usuario_logado]["saldo"]
     tk.Label(frame, text=f"SALDO\n\nR$ {saldo:.2f}", font=("Helvetica", 25, "bold"), bg="light yellow").pack(pady=20)
 
-    tk.Button(frame, text="DEPOSITAR DINHEIRO", command=b_depositar, width=35, height=3, bg="#0CA120", fg="white").pack(pady=10)
-    tk.Button(frame, text="SACAR DINHEIRO", command=b_sacar, width=35, height=3, bg="#E09625", fg="white").pack(pady=10)
+    tk.Button(frame, text="DEPOSITAR DINHEIRO", width=35, height=3, bg="#0CA120", fg="white").pack(pady=10)
+    tk.Button(frame, text="SACAR DINHEIRO", width=35, height=3, bg="#E09625", fg="white").pack(pady=10)
     tk.Button(frame, text="SAIR", command=tela_login, width=35, height=3, bg="#F31313", fg="white").pack(pady=10)
 
 #==========================#
