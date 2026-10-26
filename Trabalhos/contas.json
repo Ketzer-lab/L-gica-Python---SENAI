@@ -7,6 +7,10 @@
         "Leonardo": {
             "senha": "123",
             "saldo": 0
+        },
+        "Bruno": {
+            "senha": "bunchas",
+            "saldo": 0
         }
     }
 }

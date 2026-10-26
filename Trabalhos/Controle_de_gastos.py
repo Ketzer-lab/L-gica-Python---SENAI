@@ -144,7 +144,7 @@ def tela_criar_conta():
 
 def controle():
     limpar_root()
-    root.geometry("1000x600")
+    root.geometry("1000x700")
     root.resizable(False, False)
     root.configure(bg="#04233A")
 
@@ -154,10 +154,10 @@ def controle():
     # Label principal
     tk.Label(
         frame,
-        text=f"CAIXA ELETRÔNICO\nUsuário: {usuario_logado}",
+        text=f"CONTROLE DE GASTOS\nUsuário: {usuario_logado}",
         font=("Helvetica", 25, "bold"),
         bg="light yellow",
-        fg="#04233A"
+        fg="#050B0F"
     ).pack(pady=20)
 
     # Área para organizar os controles
@@ -174,7 +174,7 @@ def controle():
 
     tk.Button(
         frame_botoes,
-        text="DEPOSITAR DINHEIRO",
+        text="ADICIONAR RECEITA",
         command=b_depositar,
         width=30,
         height=3,
@@ -184,14 +184,44 @@ def controle():
 
     tk.Button(
         frame_botoes,
-        text="SACAR DINHEIRO",
+        text="ADICIONAR DESPESA",
         command=b_sacar,
         width=30,
         height=3,
-        bg="#E09625",
+        bg="#E05125",
         fg="white"
     ).pack(pady=12)
 
+    tk.Button(
+            frame_botoes,
+            text="MOVIMENTAÇÕES",
+            command=tela_login,
+            width=30,
+            height=3,
+            bg="#20D16A",
+            fg="white"
+        ).pack(pady=12)
+
+    tk.Button(
+            frame_botoes,
+            text="EXCLUIR MOVIMENTAÇÕES",
+            command=tela_login,
+            width=30,
+            height=3,
+            bg="#D1D422",
+            fg="white"
+        ).pack(pady=12)
+
+    tk.Button(
+            frame_botoes,
+            text="RELATÓRIO",
+            command=tela_login,
+            width=30,
+            height=3,
+            bg="#D1D422",
+            fg="white"
+        ).pack(pady=12)
+    
     tk.Button(
         frame_botoes,
         text="SAIR",
