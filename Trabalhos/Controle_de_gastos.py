@@ -3,22 +3,25 @@ from tkinter import messagebox
 import os
 import json
 
+
 #===================#
 #     Variaveis     #
 #===================#
 
-caminho_json = os.path.join(os.path.dirname(__file__), "data.json")
+
+caminho_json = os.path.join(os.path.dirname(__file__), "contas.json")
 SALDO_INICIAL = 0
 usuario_logado = None
+
 
 #=================#
 #     Funções     #
 #=================#
 
+
 def limpar_root():
     for widget in root.winfo_children():
         widget.destroy()
-
 
 def login():
     global usuario_logado
@@ -32,7 +35,6 @@ def login():
         controle()
     else:
         messagebox.showerror("Login inválido", "Usuário ou senha incorretos.")
-
 
 def carregar_contas():
     if os.path.exists(caminho_json):
@@ -53,11 +55,9 @@ def carregar_contas():
     salvar_contas(contas)
     return contas
 
-
 def salvar_contas(contas):
     with open(caminho_json, "w", encoding="utf-8") as arquivo:
         json.dump({"contas": contas}, arquivo, ensure_ascii=False, indent=4)
-
 
 def criar_conta():
     nome = entry_novo_usuario.get().strip()
@@ -89,6 +89,7 @@ def b_depositar():
 def b_sacar():
     messagebox.showinfo("Saque", "Função de saque ainda não implementada.")
 
+
 #=======================#
 #   TELAS DE ACESSO     #
 #=======================#
@@ -116,7 +117,6 @@ def tela_login():
     tk.Button(root, text="ENTRAR", command=login, width=25, height=2, bg="#0CA120", fg="white").grid(row=5, column=0, pady=12)
     tk.Button(root, text="CRIAR CONTA", command=tela_criar_conta, width=25, height=2, bg="#2471A3", fg="white").grid(row=6, column=0, pady=5)
     tk.Button(root, text="SAIR", command=root.destroy, width=25, height=2, bg="#F31313", fg="white").grid(row=7, column=0, pady=5)
-
 
 def tela_criar_conta():
     global entry_novo_usuario, entry_nova_senha
@@ -175,7 +175,7 @@ def controle():
     tk.Button(
         frame_botoes,
         text="ADICIONAR RECEITA",
-        command=b_depositar,
+        command=tela_adicionar_receita,
         width=30,
         height=3,
         bg="#0CA120",
@@ -259,9 +259,33 @@ def controle():
         fg="#0CA120"
     ).pack(pady=20)
 
+def tela_adicionar_receita():
+
+    limpar_root()
+    root.geometry("500x300")
+    root.configure(bg="#04233A")
+
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+
+    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="#BEBEBE", justify="center")
+    desc_entry.pack(fill="x", padx=20, pady=20)
+    desc_entry.insert(0, "Descrição")
+    val_entry = tk.Entry(frame, font=("Arial", 20), fg="#FFFEB6", justify="center")
+    val_entry.pack(fill="x", padx=20, pady=20)
+    val_entry.insert(0, "Valor")
+    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="#FFFEB6", justify="center")
+    dat_entry.pack(fill="x", padx=20, pady=20)
+    dat_entry.insert(0, "Data")
+
+    tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=quit).pack(fill="x", padx=20, pady=5)
+    tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
+
+
 #==========================#
 #     Janela Principal     #
 #==========================#
+
 
 root = tk.Tk()
 root.title("Controle de gastos")
