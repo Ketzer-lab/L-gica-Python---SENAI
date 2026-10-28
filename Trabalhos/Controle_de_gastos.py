@@ -10,6 +10,7 @@ import json
 
 
 caminho_json = os.path.join(os.path.dirname(__file__), "contas.json")
+caminho_move = os.path.join(os.path.dirname(__file__), "move.json")
 SALDO_INICIAL = 0
 usuario_logado = None
 
@@ -83,11 +84,65 @@ def criar_conta():
     messagebox.showinfo("Conta criada", f"Conta de {nome} criada com sucesso!\nSaldo inicial: R$ {SALDO_INICIAL:.2f}")
     tela_login()
 
-def b_depositar():
-    messagebox.showinfo("Depósito", "Função de depósito ainda não implementada.")
 
-def b_sacar():
-    messagebox.showinfo("Saque", "Função de saque ainda não implementada.")
+def adicionar_receita(desc_entry, val_entry, dat_entry):
+    descricao = desc_entry.get().strip()
+    valor_texto = val_entry.get().strip().replace(",", ".")
+    data = dat_entry.get().strip()
+
+    if not descricao or not valor_texto or not data:
+        messagebox.showerror("Erro", "Preencha todos os campos.")
+        return
+
+    try:
+        valor = float(valor_texto)
+        if valor <= 0:
+            raise ValueError
+    except ValueError:
+        messagebox.showerror("Erro", "Digite um valor maior que zero.")
+        return
+
+    from datetime import datetime
+    try:
+        datetime.strptime(data, "%d/%m/%Y")
+    except ValueError:
+        messagebox.showerror("Erro", "Use a data no formato DD/MM/AAAA.")
+        return
+
+    if usuario_logado is None:
+        messagebox.showerror("Erro", "Nenhum usuário está logado.")
+        return
+
+    contas = carregar_contas()
+
+    try:
+        if os.path.exists(caminho_move):
+            with open(caminho_move, "r", encoding="utf-8") as arquivo:
+                dados = json.load(arquivo)
+            movimentacoes = dados.get("movimentacoes", [])
+        else:
+            movimentacoes = []
+
+        if not isinstance(movimentacoes, list):
+            raise ValueError
+
+    except (OSError, json.JSONDecodeError, ValueError, AttributeError):
+        messagebox.showerror("Erro", "Não foi possível ler o arquivo move.json.")
+        return
+
+    movimentacoes.append({"usuario": usuario_logado, "tipo": "receita", "descricao": descricao, "valor": valor, "data": data})
+    contas[usuario_logado]["saldo"] += valor
+
+    try:
+        with open(caminho_move, "w", encoding="utf-8") as arquivo:
+            json.dump({"movimentacoes": movimentacoes}, arquivo, ensure_ascii=False, indent=4)
+        salvar_contas(contas)
+    except OSError:
+        messagebox.showerror("Erro", "Não foi possível salvar os dados.")
+        return
+
+    messagebox.showinfo("Sucesso", "Receita adicionada com sucesso!")
+    controle()
 
 
 #=======================#
@@ -185,7 +240,7 @@ def controle():
     tk.Button(
         frame_botoes,
         text="ADICIONAR DESPESA",
-        command=b_sacar,
+        command=quit,
         width=30,
         height=3,
         bg="#E05125",
@@ -268,19 +323,40 @@ def tela_adicionar_receita():
     frame = tk.Frame(root, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
 
-    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="#BEBEBE", justify="center")
+    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
     desc_entry.pack(fill="x", padx=20, pady=20)
     desc_entry.insert(0, "Descrição")
-    val_entry = tk.Entry(frame, font=("Arial", 20), fg="#FFFEB6", justify="center")
+    val_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
     val_entry.pack(fill="x", padx=20, pady=20)
     val_entry.insert(0, "Valor")
-    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="#FFFEB6", justify="center")
+    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
     dat_entry.pack(fill="x", padx=20, pady=20)
     dat_entry.insert(0, "Data")
 
     tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=quit).pack(fill="x", padx=20, pady=5)
     tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
 
+def tela_adicionar_despesa():
+    
+    limpar_root()
+    root.geometry("500x300")
+    root.configure(bg="#04233A")
+
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+
+    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
+    desc_entry.pack(fill="x", padx=20, pady=20)
+    desc_entry.insert(0, "Descrição")
+    val_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
+    val_entry.pack(fill="x", padx=20, pady=20)
+    val_entry.insert(0, "Valor")
+    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
+    dat_entry.pack(fill="x", padx=20, pady=20)
+    dat_entry.insert(0, "Data")
+
+    tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=adicionar_receita).pack(fill="x", padx=20, pady=5)
+    tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
 
 #==========================#
 #     Janela Principal     #
