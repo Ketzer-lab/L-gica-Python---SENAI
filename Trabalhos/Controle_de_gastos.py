@@ -85,7 +85,7 @@ def criar_conta():
     tela_login()
 
 
-def adicionar_receita(desc_entry, val_entry, dat_entry):
+def adicionar_receita():
     descricao = desc_entry.get().strip()
     valor_texto = val_entry.get().strip().replace(",", ".")
     data = dat_entry.get().strip()
@@ -116,7 +116,7 @@ def adicionar_receita(desc_entry, val_entry, dat_entry):
     contas = carregar_contas()
 
     try:
-        if os.path.exists(caminho_move):
+        if os.path.exists(caminho_move) and os.path.getsize(caminho_move) > 0:
             with open(caminho_move, "r", encoding="utf-8") as arquivo:
                 dados = json.load(arquivo)
             movimentacoes = dados.get("movimentacoes", [])
@@ -315,7 +315,29 @@ def controle():
     ).pack(pady=20)
 
 def tela_adicionar_receita():
+    global desc_entry, val_entry, dat_entry
+    limpar_root()
+    root.geometry("500x300")
+    root.configure(bg="#04233A")
 
+    frame = tk.Frame(root, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+
+    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
+    desc_entry.pack(fill="x", padx=20, pady=20)
+    desc_entry.insert(0, "Descrição")
+    val_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
+    val_entry.pack(fill="x", padx=20, pady=20)
+    val_entry.insert(0, "Valor")
+    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="black", justify="center")
+    dat_entry.pack(fill="x", padx=20, pady=20)
+    dat_entry.insert(0, "Data")
+
+    tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=adicionar_receita).pack(fill="x", padx=20, pady=5)
+    tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
+
+def tela_adicionar_despesa():
+    
     limpar_root()
     root.geometry("500x300")
     root.configure(bg="#04233A")
@@ -334,28 +356,6 @@ def tela_adicionar_receita():
     dat_entry.insert(0, "Data")
 
     tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=quit).pack(fill="x", padx=20, pady=5)
-    tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
-
-def tela_adicionar_despesa():
-    
-    limpar_root()
-    root.geometry("500x300")
-    root.configure(bg="#04233A")
-
-    frame = tk.Frame(root, bg="light yellow")
-    frame.place(relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
-
-    desc_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
-    desc_entry.pack(fill="x", padx=20, pady=20)
-    desc_entry.insert(0, "Descrição")
-    val_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
-    val_entry.pack(fill="x", padx=20, pady=20)
-    val_entry.insert(0, "Valor")
-    dat_entry = tk.Entry(frame, font=("Arial", 20), fg="#0", justify="center")
-    dat_entry.pack(fill="x", padx=20, pady=20)
-    dat_entry.insert(0, "Data")
-
-    tk.Button(frame, text="ADICIONAR", font=("Arial", 20), command=adicionar_receita).pack(fill="x", padx=20, pady=5)
     tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
 
 #==========================#

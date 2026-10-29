@@ -2,7 +2,7 @@
     "contas": {
         "user": {
             "senha": "1",
-            "saldo": 0
+            "saldo": 1000.0
         },
         "Leonardo": {
             "senha": "123",

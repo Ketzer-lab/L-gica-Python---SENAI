@@ -1,0 +1,11 @@
+{
+    "movimentacoes": [
+        {
+            "usuario": "user",
+            "tipo": "receita",
+            "descricao": "test",
+            "valor": 1000.0,
+            "data": "10/10/2000"
+        }
+    ]
+}
