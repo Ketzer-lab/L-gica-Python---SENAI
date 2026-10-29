@@ -13,6 +13,13 @@
             "descricao": "teste",
             "valor": 1000.0,
             "data": "10/10/1000"
+        },
+        {
+            "usuario": "leo",
+            "tipo": "receita",
+            "descricao": "salario",
+            "valor": 1500.0,
+            "data": "01/11/2026"
         }
     ]
 }

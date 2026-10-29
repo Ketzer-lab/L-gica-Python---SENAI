@@ -11,6 +11,10 @@
         "Bruno": {
             "senha": "bunchas",
             "saldo": 0
+        },
+        "leo": {
+            "senha": "123",
+            "saldo": 1500.0
         }
     }
 }
