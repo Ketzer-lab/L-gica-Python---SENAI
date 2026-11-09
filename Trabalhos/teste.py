@@ -254,7 +254,6 @@ def adicionar_movimentacao(tipo):
 def adicionar_receita():
     adicionar_movimentacao("receita")
 
-
 def adicionar_despesa():
     adicionar_movimentacao("despesa")
 
@@ -446,7 +445,7 @@ def gerar_relatorio():
 
     limpar_root()
 
-    root.geometry("600x600")
+    root.geometry("600x650")
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
@@ -542,57 +541,147 @@ def tela_criar_conta():
 #=============================#
 
 
+
 def controle():
     limpar_root()
 
-    root.geometry("1000x700")
+    root.geometry("1000x800")
     root.resizable(False, False)
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
     frame.place(
-relx=0.5, rely=0.5, relwidth=0.95, relheight=0.9, anchor="center")
+        relx=0.5,
+        rely=0.5,
+        relwidth=0.95,
+        relheight=0.95,
+        anchor="center"
+    )
 
-    tk.Label(frame, text=f"CONTROLE DE GASTOS\nUsuário: {usuario_logado}", font=("Helvetica", 25, "bold"), bg="light yellow", fg="#050B0F").pack(pady=20)
+    tk.Label(
+        frame,
+        text=f"CONTROLE DE GASTOS\nUsuário: {usuario_logado}",
+        font=("Helvetica", 25, "bold"),
+        bg="light yellow",
+        fg="#050B0F"
+    ).pack(pady=15)
 
     conteudo = tk.Frame(frame, bg="light yellow")
-    conteudo.pack(fill="both", expand=True, padx=20, pady=10)
+    conteudo.pack(fill="both", expand=True, padx=20, pady=5)
 
     conteudo.grid_columnconfigure(0, weight=1)
     conteudo.grid_columnconfigure(1, weight=1)
     conteudo.grid_rowconfigure(0, weight=1)
 
     frame_botoes = tk.Frame(conteudo, bg="light yellow")
-    frame_botoes.grid(row=0, column=0, sticky="nsew", padx=20, pady=10)
+    frame_botoes.grid(
+        row=0,
+        column=0,
+        sticky="nsew",
+        padx=20,
+        pady=5
+    )
 
-    tk.Button(frame_botoes, text="ADICIONAR RECEITA", command=tela_adicionar_receita, width=30, height=3, bg="#0CA120", fg="white").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="ADICIONAR RECEITA",
+        command=tela_adicionar_receita,
+        width=30,
+        height=3,
+        bg="#0CA120",
+        fg="white"
+    ).pack(pady=8)
 
-    tk.Button(frame_botoes, text="ADICIONAR DESPESA", command=tela_adicionar_despesa, width=30, height=3, bg="#E05125", fg="white").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="ADICIONAR DESPESA",
+        command=tela_adicionar_despesa,
+        width=30,
+        height=3,
+        bg="#E05125",
+        fg="white"
+    ).pack(pady=8)
 
-    tk.Button(frame_botoes, text="MOVIMENTAÇÕES", command=tela_movimentacoes, width=30, height=3, bg="#20D16A", fg="white").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="MOVIMENTAÇÕES",
+        command=tela_movimentacoes,
+        width=30,
+        height=3,
+        bg="#20D16A",
+        fg="white"
+    ).pack(pady=8)
 
-    tk.Button(frame_botoes, text="EXCLUIR MOVIMENTAÇÕES", command=tela_excluir_movimentacoes, width=30, height=3, bg="#D1D422", fg="black").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="EXCLUIR MOVIMENTAÇÕES",
+        command=tela_excluir_movimentacoes,
+        width=30,
+        height=3,
+        bg="#D1D422",
+        fg="black"
+    ).pack(pady=8)
 
-    tk.Button(frame_botoes, text="RELATÓRIO", command=gerar_relatorio, width=30, height=3, bg="#D1D422", fg="black").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="RELATÓRIO",
+        command=gerar_relatorio,
+        width=30,
+        height=3,
+        bg="#D1D422",
+        fg="black"
+    ).pack(pady=8)
 
-    tk.Button(frame_botoes, text="SAIR", command=sair, width=30, height=3, bg="#F31313", fg="white").pack(pady=12)
+    tk.Button(
+        frame_botoes,
+        text="SAIR",
+        command=sair,
+        width=30,
+        height=3,
+        bg="#F31313",
+        fg="white"
+    ).pack(pady=8)
 
-    frame_saldo = tk.Frame(conteudo, bg="white", relief="groove", bd=2)
+    frame_saldo = tk.Frame(
+        conteudo,
+        bg="white",
+        relief="groove",
+        bd=2
+    )
 
-    frame_saldo.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
+    frame_saldo.grid(
+        row=0,
+        column=1,
+        sticky="nsew",
+        padx=20,
+        pady=20
+    )
 
     saldo = carregar_contas()[usuario_logado]["saldo"]
 
-    tk.Label(frame_saldo, text="SALDO DISPONÍVEL", font=("Helvetica", 20, "bold"), bg="white", fg="#04233A").pack(pady=(70, 20))
+    tk.Label(
+        frame_saldo,
+        text="SALDO DISPONÍVEL",
+        font=("Helvetica", 20, "bold"),
+        bg="white",
+        fg="#04233A"
+    ).pack(pady=(70, 20))
 
     cor_saldo = "#0CA120" if saldo >= 0 else "#E05125"
 
-    tk.Label(frame_saldo, text=f"R$ {saldo:.2f}", font=("Helvetica", 30, "bold"), bg="white", fg=cor_saldo).pack(pady=20)
+    tk.Label(
+        frame_saldo,
+        text=f"R$ {saldo:.2f}",
+        font=("Helvetica", 30, "bold"),
+        bg="white",
+        fg=cor_saldo
+    ).pack(pady=20)
 
 
-#=============================#
-#   ADICIONAR RECEITA         #
-#=============================#
+
+#=================================#
+#   ADICIONAR RECEITA / DESPESA   #
+#=================================#
 
 
 def tela_adicionar_receita():
@@ -600,7 +689,7 @@ def tela_adicionar_receita():
 
     limpar_root()
 
-    root.geometry("500x370")
+    root.geometry("500x390")
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
@@ -627,18 +716,12 @@ def tela_adicionar_receita():
 
     tk.Button(frame, text="VOLTAR", command=controle).pack(pady=5)
 
-
-#=============================#
-#   ADICIONAR DESPESA         #
-#=============================#
-
-
 def tela_adicionar_despesa():
     global desc_entry, val_entry, dat_entry
 
     limpar_root()
 
-    root.geometry("500x370")
+    root.geometry("500x390")
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
@@ -676,7 +759,7 @@ def tela_movimentacoes():
 
     limpar_root()
 
-    root.geometry("950x650")
+    root.geometry("950x750")
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")
@@ -759,7 +842,7 @@ def tela_excluir_movimentacoes():
 
     limpar_root()
 
-    root.geometry("950x650")
+    root.geometry("950x750")
     root.configure(bg="#04233A")
 
     frame = tk.Frame(root, bg="light yellow")

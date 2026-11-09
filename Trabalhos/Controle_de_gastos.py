@@ -199,7 +199,7 @@ def tela_criar_conta():
 
 def controle():
     limpar_root()
-    root.geometry("1000x700")
+    root.geometry("1000x800")
     root.resizable(False, False)
     root.configure(bg="#04233A")
 
@@ -245,7 +245,7 @@ def controle():
         height=3,
         bg="#E05125",
         fg="white"
-    ).pack(pady=12)
+    ).pack(pady=8)
 
     tk.Button(
             frame_botoes,
@@ -255,7 +255,7 @@ def controle():
             height=3,
             bg="#20D16A",
             fg="white"
-        ).pack(pady=12)
+        ).pack(pady=8)
 
     tk.Button(
             frame_botoes,
@@ -265,7 +265,7 @@ def controle():
             height=3,
             bg="#D1D422",
             fg="white"
-        ).pack(pady=12)
+        ).pack(pady=8)
 
     tk.Button(
             frame_botoes,
@@ -275,7 +275,7 @@ def controle():
             height=3,
             bg="#D1D422",
             fg="white"
-        ).pack(pady=12)
+        ).pack(pady=8)
     
     tk.Button(
         frame_botoes,
@@ -285,7 +285,7 @@ def controle():
         height=3,
         bg="#F31313",
         fg="white"
-    ).pack(pady=12)
+    ).pack(pady=8)
 
     # Lado direito: saldo
     frame_saldo = tk.Frame(
