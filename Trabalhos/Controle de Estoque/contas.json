@@ -1,0 +1,24 @@
+{
+    "contas": {
+        "user": {
+            "senha": "1",
+            "produtos": [
+                {
+                    "codigo": 1,
+                    "descricao": "NOTEBOOK LENOVO",
+                    "categoria": "ELETRÔNICOS",
+                    "quantidade": 1,
+                    "valor": 3450.0
+                },
+                {
+                    "codigo": 2,
+                    "descricao": "LEITE",
+                    "categoria": "LACTICINEOS",
+                    "quantidade": 10,
+                    "valor": 6.0
+                }
+            ],
+            "proximo_codigo": 3
+        }
+    }
+}
