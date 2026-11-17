@@ -7,14 +7,14 @@
                     "codigo": 1,
                     "descricao": "NOTEBOOK LENOVO",
                     "categoria": "ELETRÔNICOS",
-                    "quantidade": 1,
+                    "quantidade": 3,
                     "valor": 3450.0
                 },
                 {
                     "codigo": 2,
                     "descricao": "LEITE",
                     "categoria": "LACTICINEOS",
-                    "quantidade": 10,
+                    "quantidade": 30,
                     "valor": 6.0
                 }
             ],

@@ -123,238 +123,222 @@ def criar_conta():
 
 def carregar_produtos():
     contas = carregar_contas()
-
-    if usuario_logado not in contas:
-        return []
-
-    return contas[usuario_logado].get("produtos", [])
+    return contas.get(usuario_logado, {}).get("produtos", [])
 
 def atualizar_tabela():
-    produtos = carregar_produtos()
-
-    # Limpa a tabela
-    for item in tabela.get_children():
-        tabela.delete(item)
-
-    # Insere os produtos
-    for produto in produtos:
-        tabela.insert(
-            "",
-            "end",
-            values=(
-                produto["codigo"],
-                produto["descricao"],
-                produto["categoria"],
-                produto["quantidade"],
-                f'R$ {produto["valor"]:.2f}'
-            )
-        )
+    tabela.delete(*tabela.get_children())
+    for p in carregar_produtos():
+        tabela.insert("", "end", values=(p["codigo"], p["descricao"], p["categoria"], p["quantidade"], f'R$ {p["valor"]:.2f}'))
 
 def novo_produto():
-    
     janela = tk.Toplevel(root)
     janela.title("Novo Produto")
     janela.geometry("450x500")
     janela.resizable(False, False)
     janela.configure(bg="#EFF0B8")
-
     janela.transient(root)
     janela.grab_set()
 
-    # Centraliza a janela
     janela.update_idletasks()
-
     x = root.winfo_x() + (root.winfo_width() - 450) // 2
     y = root.winfo_y() + (root.winfo_height() - 500) // 2
-
     janela.geometry(f"+{x}+{y}")
 
-    # Frame principal
     frame = tk.Frame(janela, bg="light yellow")
-    frame.place(
-        relx=0.5,
-        rely=0.5,
-        relwidth=0.9,
-        relheight=0.92,
-        anchor="center"
-    )
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.92, anchor="center")
 
-    tk.Label(
-        frame,
-        text="NOVO PRODUTO",
-        font=("Helvetica", 20, "bold"),
-        bg="light yellow"
-    ).pack(pady=15)
+    tk.Label(frame, text="NOVO PRODUTO", font=("Helvetica", 20, "bold"), bg="light yellow").pack(pady=15)
 
-    # DESCRIÇÃO
-    tk.Label(
-        frame,
-        text="Descrição:",
-        font=("Arial", 12, "bold"),
-        bg="light yellow"
-    ).pack(anchor="w", padx=20)
-
+    tk.Label(frame, text="Descrição:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_descricao = tk.Entry(frame, font=("Arial", 13))
     entry_descricao.pack(fill="x", padx=20, pady=5)
 
-    # CATEGORIA
-    tk.Label(
-        frame,
-        text="Categoria:",
-        font=("Arial", 12, "bold"),
-        bg="light yellow"
-    ).pack(anchor="w", padx=20)
-
+    tk.Label(frame, text="Categoria:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_categoria = tk.Entry(frame, font=("Arial", 13))
     entry_categoria.pack(fill="x", padx=20, pady=5)
 
-    # QUANTIDADE
-    tk.Label(
-        frame,
-        text="Quantidade:",
-        font=("Arial", 12, "bold"),
-        bg="light yellow"
-    ).pack(anchor="w", padx=20)
-
+    tk.Label(frame, text="Quantidade:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_quantidade = tk.Entry(frame, font=("Arial", 13))
     entry_quantidade.pack(fill="x", padx=20, pady=5)
 
-    # VALOR
-    tk.Label(
-        frame,
-        text="Valor unitário (R$):",
-        font=("Arial", 12, "bold"),
-        bg="light yellow"
-    ).pack(anchor="w", padx=20)
-
+    tk.Label(frame, text="Valor unitário (R$):", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_valor = tk.Entry(frame, font=("Arial", 13))
     entry_valor.pack(fill="x", padx=20, pady=5)
 
-    # FUNÇÃO SALVAR
+    # SALVAR PRODUTO
     def salvar_produto():
-
         descricao = entry_descricao.get().strip()
         categoria = entry_categoria.get().strip()
         quantidade = entry_quantidade.get().strip()
         valor = entry_valor.get().strip()
 
-        # Verifica campos vazios
-        if not descricao or not categoria or not quantidade or not valor:
-            messagebox.showwarning(
-                "Atenção",
-                "Preencha todos os campos.",
-                parent=janela
-            )
+        if not all([descricao, categoria, quantidade, valor]):
+            messagebox.showwarning("Atenção", "Preencha todos os campos.", parent=janela)
             return
 
-        # Valida quantidade
         try:
             quantidade = int(quantidade)
-
             if quantidade <= 0:
                 raise ValueError
-
         except ValueError:
-            messagebox.showerror(
-                "Erro",
-                "Informe uma quantidade inteira maior que zero.",
-                parent=janela
-            )
+            messagebox.showerror("Erro", "Informe uma quantidade inteira maior que zero.", parent=janela)
             return
 
-        # Valida valor
         try:
-            if "," in valor:
-                valor = valor.replace(".", "").replace(",", ".")
-
-            valor = float(valor)
-
+            valor = float(valor.replace(".", "").replace(",", ".") if "," in valor else valor)
             if valor < 0:
                 raise ValueError
-
         except ValueError:
-            messagebox.showerror(
-                "Erro",
-                "Informe um valor válido.",
-                parent=janela
-            )
+            messagebox.showerror("Erro", "Informe um valor válido.", parent=janela)
             return
 
-        # Carrega contas
         contas = carregar_contas()
-
-        # Inicializa produtos
-        if "produtos" not in contas[usuario_logado]:
-            contas[usuario_logado]["produtos"] = []
-
-        produtos = contas[usuario_logado]["produtos"]
+        produtos = contas[usuario_logado].setdefault("produtos", [])
 
         # GERAÇÃO PERMANENTE DO CÓDIGO
-        codigos_existentes = [
-            int(p["codigo"])
-            for p in produtos
-            if str(p.get("codigo", "")).isdigit()
-        ]
-
-        maior_codigo = max(codigos_existentes, default=0)
-
-        proximo_codigo = contas[usuario_logado].get("proximo_codigo")
-
-        if proximo_codigo is None:
-            proximo_codigo = maior_codigo + 1
-
-        codigo = max(
-            int(proximo_codigo),
-            maior_codigo + 1
-        )
-
+        maior_codigo = max((int(p["codigo"]) for p in produtos if str(p.get("codigo", "")).isdigit()), default=0)
+        codigo = max(int(contas[usuario_logado].get("proximo_codigo") or 1), maior_codigo + 1)
         contas[usuario_logado]["proximo_codigo"] = codigo + 1
 
-        # Cria produto
-        produto = {
+        produtos.append({
             "codigo": codigo,
             "descricao": descricao,
             "categoria": categoria,
             "quantidade": quantidade,
             "valor": valor
-        }
-
-        # Salva produto
-        produtos.append(produto)
+        })
 
         salvar_contas(contas)
-
-        # Atualiza Treeview
         atualizar_tabela()
-
-        messagebox.showinfo(
-            "Sucesso",
-            "Produto cadastrado com sucesso!",
-            parent=janela
-        )
-
+        messagebox.showinfo("Sucesso", "Produto cadastrado com sucesso!", parent=janela)
         janela.destroy()
 
+    tk.Button(frame, text="SALVAR PRODUTO", command=salvar_produto, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
+    tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack()
+
+#=========================#
+#   ENTRADE DE PRODUTO    #
+#=========================#
+
+
+
+def entrada():
+    janela = tk.Toplevel(root)
+    janela.title("Entrada de Produto")
+    janela.geometry("450x600")
+    janela.resizable(False, False)
+    janela.configure(bg="#EFF0B8")
+    janela.transient(root)
+    janela.grab_set()
+
+    produtos = carregar_produtos()
+
+    frame = tk.Frame(janela, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.95, anchor="center")
+
+    frame.grid_columnconfigure(0, weight=1)
+    frame.grid_rowconfigure(3, weight=1)
+
+    tk.Label(frame, text="SELECIONE O PRODUTO", font=("Helvetica", 17, "bold"), bg="light yellow").grid(row=0, column=0, pady=15)
+
+    # PESQUISA
+    tk.Label(frame, text="Pesquisar por código ou descrição:", font=("Arial", 11, "bold"), bg="light yellow").grid(row=1, column=0, sticky="w", padx=10)
+
+    entry_pesquisa = tk.Entry(frame, font=("Arial", 12))
+    entry_pesquisa.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
+
+    # TREEVIEW
+    lista = ttk.Treeview(frame, columns=("codigo", "descricao"), show="headings")
+
+    lista.heading("codigo", text="Código")
+    lista.heading("descricao", text="Descrição")
+    lista.column("codigo", width=80, anchor="center")
+    lista.column("descricao", width=270, anchor="center")
+
+    lista.grid(row=3, column=0, sticky="nsew", padx=10, pady=5)
+
+    # PESQUISA
+    def atualizar_lista(event=None):
+        pesquisa = entry_pesquisa.get().strip().lower()
+        lista.delete(*lista.get_children())
+
+        for p in produtos:
+            if pesquisa in str(p["codigo"]).lower() or pesquisa in p["descricao"].lower():
+                lista.insert("", "end", values=(p["codigo"], p["descricao"]))
+
+    entry_pesquisa.bind("<KeyRelease>", atualizar_lista)
+    atualizar_lista()
+
+    # SELECIONAR PRODUTO
+    def selecionar_produto():
+        selecionado = lista.selection()
+
+        if not selecionado:
+            messagebox.showwarning("Atenção", "Selecione um produto.", parent=janela)
+            return
+
+        codigo = int(lista.item(selecionado[0], "values")[0])
+        produto = next((p for p in produtos if int(p["codigo"]) == codigo), None)
+
+        if produto:
+            janela.destroy()
+            janela_entrada(produto)
+
     # BOTÕES
-    tk.Button(
-        frame,
-        text="SALVAR PRODUTO",
-        command=salvar_produto,
-        width=25,
-        height=2,
-        bg="#0CA120",
-        fg="white"
-    ).pack(pady=15)
+    tk.Button(frame, text="ENTRADA", command=selecionar_produto, width=20, height=2, bg="#0CA120", fg="white").grid(row=4, column=0, pady=5)
 
-    tk.Button(
-        frame,
-        text="CANCELAR",
-        command=janela.destroy,
-        width=25,
-        height=2
-    ).pack()
+    tk.Button(frame, text="CANCELAR", command=janela.destroy, width=20, height=2).grid(row=5, column=0, pady=5)
 
+def janela_entrada(produto):
+    janela = tk.Toplevel(root)
+    janela.title("Quantidade de Entrada")
+    janela.geometry("400x300")
+    janela.resizable(False, False)
+    janela.configure(bg="#EFF0B8")
+    janela.transient(root)
+    janela.grab_set()
 
+    frame = tk.Frame(janela, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.9, anchor="center")
+
+    tk.Label(frame, text=produto["descricao"], font=("Helvetica", 17, "bold"), bg="light yellow").pack(pady=20)
+
+    tk.Label(frame, text="Quantidade de entrada:", font=("Arial", 12, "bold"), bg="light yellow").pack(pady=5)
+
+    entry_quantidade = tk.Entry(frame, font=("Arial", 14), justify="center")
+    entry_quantidade.pack(padx=20, fill="x", pady=5)
+
+    # CONCLUIR ENTRADA
+    def concluir():
+        quantidade = entry_quantidade.get().strip()
+
+        try:
+            quantidade = int(quantidade)
+            if quantidade <= 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Erro", "Informe uma quantidade inteira maior que zero.", parent=janela)
+            return
+
+        contas = carregar_contas()
+        produtos = contas[usuario_logado].get("produtos", [])
+
+        atual = next((p for p in produtos if int(p["codigo"]) == int(produto["codigo"])), None)
+
+        if atual is None:
+            messagebox.showerror("Erro", "Produto não encontrado.", parent=janela)
+            return
+
+        atual["quantidade"] = int(atual["quantidade"]) + quantidade
+
+        salvar_contas(contas)
+        atualizar_tabela()
+
+        janela.destroy()
+        entrada()
+
+    tk.Button(frame, text="CONCLUIR", command=concluir, width=20, height=2, bg="#0CA120", fg="white").pack(pady=15)
+    tk.Button(frame, text="CANCELAR", command=lambda: (janela.destroy(), entrada()), width=20, height=2).pack()
 
 #======================#
 #   EXCLUIR PRODUTO    #
@@ -455,7 +439,7 @@ def controle():
 
     tk.Button(barra_botoes, text="Novo produto", command=novo_produto, width=15, height=2).pack(side="left", padx=5)
 
-    tk.Button(barra_botoes, text="Entrada", command=teste, width=15, height=2).pack(side="left", padx=5)
+    tk.Button(barra_botoes, text="Entrada", command=entrada, width=15, height=2).pack(side="left", padx=5)
 
     tk.Button(barra_botoes, text="Excluir", command=teste, width=15, height=2).pack(side="left", padx=5)
 
