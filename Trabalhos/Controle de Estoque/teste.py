@@ -220,8 +220,6 @@ def novo_produto():
 #   ENTRADE DE PRODUTO    #
 #=========================#
 
-
-
 def entrada():
     janela = tk.Toplevel(root)
     janela.title("Entrada de Produto")
@@ -344,6 +342,59 @@ def janela_entrada(produto):
 #   EXCLUIR PRODUTO    #
 #======================#
 
+
+def excluir_produto():
+    selecionado = tabela.selection()
+
+    # VERIFICA SE ALGUM PRODUTO FOI SELECIONADO
+    if not selecionado:
+        messagebox.showwarning(
+            "Atenção",
+            "Selecione um produto para excluir."
+        )
+        return
+
+    # PEGA O CÓDIGO DO PRODUTO SELECIONADO
+    valores = tabela.item(selecionado[0], "values")
+    codigo = int(valores[0])
+    descricao = valores[1]
+
+    # CONFIRMAÇÃO DA EXCLUSÃO
+    confirmar = messagebox.askyesno(
+        "Confirmar exclusão",
+        f"Deseja realmente excluir o produto:\n\n"
+        f"{descricao} (Código: {codigo})?"
+    )
+
+    if not confirmar:
+        return
+
+    # CARREGA AS CONTAS
+    contas = carregar_contas()
+
+    # PEGA OS PRODUTOS DO USUÁRIO LOGADO
+    produtos = contas[usuario_logado].get("produtos", [])
+
+    # REMOVE O PRODUTO PELO CÓDIGO
+    produtos = [
+        p for p in produtos
+        if int(p["codigo"]) != codigo
+    ]
+
+    contas[usuario_logado]["produtos"] = produtos
+
+    # SALVA NO JSON
+    salvar_contas(contas)
+
+    # ATUALIZA A TREEVIEW
+    atualizar_tabela()
+
+    messagebox.showinfo(
+        "Sucesso",
+        "Produto excluído com sucesso!"
+    )
+
+
 #====================#
 #   ALTERAR PRODUTO  #
 #====================#
@@ -441,7 +492,7 @@ def controle():
 
     tk.Button(barra_botoes, text="Entrada", command=entrada, width=15, height=2).pack(side="left", padx=5)
 
-    tk.Button(barra_botoes, text="Excluir", command=teste, width=15, height=2).pack(side="left", padx=5)
+    tk.Button(barra_botoes, text="Excluir", command=excluir_produto, width=15, height=2).pack(side="left", padx=5)
 
     tk.Button(barra_botoes, text="Filtrar", command=teste, width=15, height=2).pack(side="left", padx=5)
 

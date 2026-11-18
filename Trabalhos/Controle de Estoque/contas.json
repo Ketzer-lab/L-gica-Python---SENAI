@@ -9,13 +9,6 @@
                     "categoria": "ELETRÔNICOS",
                     "quantidade": 3,
                     "valor": 3450.0
-                },
-                {
-                    "codigo": 2,
-                    "descricao": "LEITE",
-                    "categoria": "LACTICINEOS",
-                    "quantidade": 30,
-                    "valor": 6.0
                 }
             ],
             "proximo_codigo": 3
