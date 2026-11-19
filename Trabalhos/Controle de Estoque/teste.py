@@ -399,9 +399,210 @@ def excluir_produto():
 #   ALTERAR PRODUTO  #
 #====================#
 
+
+def editar_produto(event=None):
+    selecionado = tabela.selection()
+
+    if not selecionado:
+        return
+
+    codigo = int(tabela.item(selecionado[0], "values")[0])
+
+    produto = next((p for p in carregar_produtos() if int(p["codigo"]) == codigo), None)
+
+    if produto is None:
+        return
+
+    janela = tk.Toplevel(root)
+    janela.title("Editar Produto")
+    janela.geometry("450x500")
+    janela.resizable(False, False)
+    janela.configure(bg="#EFF0B8")
+    janela.transient(root)
+    janela.grab_set()
+
+    frame = tk.Frame(janela, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.95, anchor="center")
+
+    tk.Label(frame, text="EDITAR PRODUTO", font=("Helvetica", 20, "bold"), bg="light yellow").pack(pady=15)
+
+    # CÓDIGO
+    tk.Label(frame, text="Código:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_codigo = tk.Entry(frame, font=("Arial", 13))
+    entry_codigo.pack(fill="x", padx=20, pady=5)
+    entry_codigo.insert(0, produto["codigo"])
+    entry_codigo.config(state="readonly")
+
+    # DESCRIÇÃO
+    tk.Label(frame, text="Descrição:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_descricao = tk.Entry(frame, font=("Arial", 13))
+    entry_descricao.pack(fill="x", padx=20, pady=5)
+    entry_descricao.insert(0, produto["descricao"])
+
+    # CATEGORIA
+    tk.Label(frame, text="Categoria:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_categoria = tk.Entry(frame, font=("Arial", 13))
+    entry_categoria.pack(fill="x", padx=20, pady=5)
+    entry_categoria.insert(0, produto["categoria"])
+
+    # QUANTIDADE
+    tk.Label(frame, text="Quantidade:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_quantidade = tk.Entry(frame, font=("Arial", 13))
+    entry_quantidade.pack(fill="x", padx=20, pady=5)
+    entry_quantidade.insert(0, produto["quantidade"])
+
+    # VALOR
+    tk.Label(frame, text="Valor unitário (R$):", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_valor = tk.Entry(frame, font=("Arial", 13))
+    entry_valor.pack(fill="x", padx=20, pady=5)
+    entry_valor.insert(0, produto["valor"])
+
+    # SALVAR ALTERAÇÕES
+    def salvar():
+        descricao = entry_descricao.get().strip()
+        categoria = entry_categoria.get().strip()
+        quantidade = entry_quantidade.get().strip()
+        valor = entry_valor.get().strip()
+
+        if not all([descricao, categoria, quantidade, valor]):
+            messagebox.showwarning("Atenção", "Preencha todos os campos.", parent=janela)
+            return
+
+        try:
+            quantidade = int(quantidade)
+            if quantidade < 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Erro", "Informe uma quantidade inteira maior ou igual a zero.", parent=janela)
+            return
+
+        try:
+            valor = float(valor.replace(",", "."))
+            if valor < 0:
+                raise ValueError
+        except ValueError:
+            messagebox.showerror("Erro", "Informe um valor válido.", parent=janela)
+            return
+
+        contas = carregar_contas()
+        produtos = contas[usuario_logado].get("produtos", [])
+
+        atual = next((p for p in produtos if int(p["codigo"]) == codigo), None)
+
+        if atual is None:
+            messagebox.showerror("Erro", "Produto não encontrado.", parent=janela)
+            return
+
+        atual["descricao"] = descricao
+        atual["categoria"] = categoria
+        atual["quantidade"] = quantidade
+        atual["valor"] = valor
+
+        salvar_contas(contas)
+        atualizar_tabela()
+
+        janela.destroy()
+        messagebox.showinfo("Sucesso", "Produto alterado com sucesso!")
+
+    tk.Button(frame, text="SALVAR ALTERAÇÕES", command=salvar, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
+    tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack()
+
+
 #==============#
 #   FILTRAR    #
 #==============#
+
+def filtrar():
+    janela = tk.Toplevel(root)
+    janela.title("Filtrar Produtos")
+    janela.geometry("450x450")
+    janela.resizable(False, False)
+    janela.configure(bg="#EFF0B8")
+    janela.transient(root)
+    janela.grab_set()
+
+    frame = tk.Frame(janela, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.95, anchor="center")
+
+    tk.Label(frame, text="FILTRAR PRODUTOS", font=("Helvetica", 20, "bold"), bg="light yellow").pack(pady=15)
+
+    # DESCRIÇÃO
+    tk.Label(frame, text="Descrição:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_descricao = tk.Entry(frame, font=("Arial", 13))
+    entry_descricao.pack(fill="x", padx=20, pady=5)
+
+    # CATEGORIA
+    tk.Label(frame, text="Categoria:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+
+    produtos = carregar_produtos()
+    categorias = sorted(set(p["categoria"] for p in produtos), key=str.lower)
+
+    combo_categoria = ttk.Combobox(frame, values=["Todas"] + categorias, state="readonly", font=("Arial", 12))
+    combo_categoria.pack(fill="x", padx=20, pady=5)
+    combo_categoria.set("Todas")
+
+    # CÓDIGO
+    tk.Label(frame, text="Intervalo de código:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+
+    frame_codigo = tk.Frame(frame, bg="light yellow")
+    frame_codigo.pack(fill="x", padx=20, pady=5)
+
+    entry_inicio = tk.Entry(frame_codigo, font=("Arial", 13), justify="center")
+    entry_inicio.pack(side="left", fill="x", expand=True)
+
+    tk.Label(frame_codigo, text=" até ", bg="light yellow", font=("Arial", 12, "bold")).pack(side="left")
+
+    entry_fim = tk.Entry(frame_codigo, font=("Arial", 13), justify="center")
+    entry_fim.pack(side="left", fill="x", expand=True)
+
+    # APLICAR FILTROS
+    def aplicar():
+        descricao = entry_descricao.get().strip().lower()
+        categoria = combo_categoria.get()
+        inicio = entry_inicio.get().strip()
+        fim = entry_fim.get().strip()
+
+        if bool(inicio) != bool(fim):
+            messagebox.showwarning("Atenção", "Preencha os dois códigos.", parent=janela)
+            return
+
+        if inicio and fim:
+            try:
+                inicio = int(inicio)
+                fim = int(fim)
+
+                if inicio <= 0 or fim < inicio:
+                    raise ValueError
+            except ValueError:
+                messagebox.showerror("Erro", "Informe um intervalo de códigos válido.", parent=janela)
+                return
+
+        tabela.delete(*tabela.get_children())
+
+        for p in carregar_produtos():
+            codigo = int(p["codigo"])
+
+            if descricao and descricao not in p["descricao"].lower():
+                continue
+
+            if categoria != "Todas" and categoria != p["categoria"]:
+                continue
+
+            if inicio and not inicio <= codigo <= fim:
+                continue
+
+            tabela.insert("", "end", values=(p["codigo"], p["descricao"], p["categoria"], p["quantidade"], f'R$ {p["valor"]:.2f}'))
+
+        janela.destroy()
+
+    # LIMPAR FILTROS
+    def limpar():
+        atualizar_tabela()
+        janela.destroy()
+
+    tk.Button(frame, text="APLICAR FILTROS", command=aplicar, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
+    tk.Button(frame, text="LIMPAR FILTROS", command=limpar, width=25, height=2).pack(pady=5)
+    tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack(pady=5)
 
 #=======================#
 #   TELAS DE ACESSO     #
@@ -494,7 +695,7 @@ def controle():
 
     tk.Button(barra_botoes, text="Excluir", command=excluir_produto, width=15, height=2).pack(side="left", padx=5)
 
-    tk.Button(barra_botoes, text="Filtrar", command=teste, width=15, height=2).pack(side="left", padx=5)
+    tk.Button(barra_botoes, text="Filtrar", command=filtrar, width=15, height=2).pack(side="left", padx=5)
 
     tk.Button(barra_botoes, text="Sair", command=sair, width=15, height=2).pack(side="left", padx=5)
 
@@ -525,6 +726,9 @@ def controle():
 
     tabela.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
+
+    # EDITAR PRODUTO COM DOIS CLIQUES
+    tabela.bind("<Double-1>", editar_produto)
 
     # CARREGA PRODUTOS
     atualizar_tabela()

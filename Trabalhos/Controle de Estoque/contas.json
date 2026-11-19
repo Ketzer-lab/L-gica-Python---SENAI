@@ -12,6 +12,19 @@
                 }
             ],
             "proximo_codigo": 3
+        },
+        "leo": {
+            "senha": "123",
+            "produtos": [
+                {
+                    "codigo": 1,
+                    "descricao": "leite",
+                    "categoria": "laticineo",
+                    "quantidade": 60,
+                    "valor": 5.0
+                }
+            ],
+            "proximo_codigo": 3
         }
     }
 }
