@@ -216,13 +216,13 @@ def novo_produto():
     tk.Button(frame, text="SALVAR PRODUTO", command=salvar_produto, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
     tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack()
 
-#=========================#
-#   ENTRADE DE PRODUTO    #
-#=========================#
+#=============================#
+#     MOVIMENTAÇÃO            #
+#=============================#
 
-def entrada():
+def movimentacao():
     janela = tk.Toplevel(root)
-    janela.title("Entrada de Produto")
+    janela.title("Movimentação")
     janela.geometry("450x600")
     janela.resizable(False, False)
     janela.configure(bg="#EFF0B8")
@@ -233,29 +233,22 @@ def entrada():
 
     frame = tk.Frame(janela, bg="light yellow")
     frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.95, anchor="center")
-
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_rowconfigure(3, weight=1)
 
     tk.Label(frame, text="SELECIONE O PRODUTO", font=("Helvetica", 17, "bold"), bg="light yellow").grid(row=0, column=0, pady=15)
-
-    # PESQUISA
     tk.Label(frame, text="Pesquisar por código ou descrição:", font=("Arial", 11, "bold"), bg="light yellow").grid(row=1, column=0, sticky="w", padx=10)
 
     entry_pesquisa = tk.Entry(frame, font=("Arial", 12))
     entry_pesquisa.grid(row=2, column=0, sticky="ew", padx=10, pady=5)
 
-    # TREEVIEW
     lista = ttk.Treeview(frame, columns=("codigo", "descricao"), show="headings")
-
     lista.heading("codigo", text="Código")
     lista.heading("descricao", text="Descrição")
     lista.column("codigo", width=80, anchor="center")
     lista.column("descricao", width=270, anchor="center")
-
     lista.grid(row=3, column=0, sticky="nsew", padx=10, pady=5)
 
-    # PESQUISA
     def atualizar_lista(event=None):
         pesquisa = entry_pesquisa.get().strip().lower()
         lista.delete(*lista.get_children())
@@ -264,11 +257,7 @@ def entrada():
             if pesquisa in str(p["codigo"]).lower() or pesquisa in p["descricao"].lower():
                 lista.insert("", "end", values=(p["codigo"], p["descricao"]))
 
-    entry_pesquisa.bind("<KeyRelease>", atualizar_lista)
-    atualizar_lista()
-
-    # SELECIONAR PRODUTO
-    def selecionar_produto():
+    def selecionar():
         selecionado = lista.selection()
 
         if not selecionado:
@@ -280,46 +269,69 @@ def entrada():
 
         if produto:
             janela.destroy()
-            janela_entrada(produto)
+            janela_movimentacao_produto(produto)
 
-    # BOTÕES
-    tk.Button(frame, text="ENTRADA", command=selecionar_produto, width=20, height=2, bg="#0CA120", fg="white").grid(row=4, column=0, pady=5)
+    entry_pesquisa.bind("<KeyRelease>", atualizar_lista)
+    atualizar_lista()
 
+    tk.Button(frame, text="SELECIONAR", command=selecionar, width=20, height=2, bg="#0CA120", fg="white").grid(row=4, column=0, pady=5)
     tk.Button(frame, text="CANCELAR", command=janela.destroy, width=20, height=2).grid(row=5, column=0, pady=5)
 
-def janela_entrada(produto):
+
+def janela_movimentacao_produto(produto):
     janela = tk.Toplevel(root)
-    janela.title("Quantidade de Entrada")
-    janela.geometry("400x300")
+    janela.title("Movimentação")
+    janela.geometry("420x450")
     janela.resizable(False, False)
     janela.configure(bg="#EFF0B8")
     janela.transient(root)
     janela.grab_set()
 
     frame = tk.Frame(janela, bg="light yellow")
-    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.9, anchor="center")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.9, relheight=0.95, anchor="center")
 
-    tk.Label(frame, text=produto["descricao"], font=("Helvetica", 17, "bold"), bg="light yellow").pack(pady=20)
+    tk.Label(frame, text="MOVIMENTAÇÃO", font=("Helvetica", 20, "bold"), bg="light yellow").pack(pady=15)
+    tk.Label(frame, text=produto["descricao"], font=("Arial", 15, "bold"), bg="light yellow").pack(pady=5)
+    tk.Label(frame, text=f"Estoque atual: {produto['quantidade']} unidades", font=("Arial", 12), bg="light yellow").pack(pady=5)
 
-    tk.Label(frame, text="Quantidade de entrada:", font=("Arial", 12, "bold"), bg="light yellow").pack(pady=5)
+    tk.Label(frame, text="Tipo de movimentação:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20, pady=(15, 5))
 
-    entry_quantidade = tk.Entry(frame, font=("Arial", 14), justify="center")
-    entry_quantidade.pack(padx=20, fill="x", pady=5)
+    combo_tipo = ttk.Combobox(frame, values=["Entrada", "Saída"], state="readonly", font=("Arial", 13))
+    combo_tipo.pack(fill="x", padx=20)
+    combo_tipo.set("Entrada")
 
-    # CONCLUIR ENTRADA
+    tk.Label(frame, text="Quantidade:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20, pady=(15, 5))
+
+    entry_quantidade = tk.Entry(frame, font=("Arial", 13), justify="center")
+    entry_quantidade.pack(fill="x", padx=20)
+
+    tk.Label(frame, text="Data (dd/mm/aaaa):", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20, pady=(15, 5))
+
+    entry_data = tk.Entry(frame, font=("Arial", 13), justify="center")
+    entry_data.pack(fill="x", padx=20)
+    entry_data.insert(0, datetime.now().strftime("%d/%m/%Y"))
+
     def concluir():
-        quantidade = entry_quantidade.get().strip()
+        tipo = combo_tipo.get()
+        data = entry_data.get().strip()
 
         try:
-            quantidade = int(quantidade)
+            quantidade = int(entry_quantidade.get())
             if quantidade <= 0:
                 raise ValueError
         except ValueError:
             messagebox.showerror("Erro", "Informe uma quantidade inteira maior que zero.", parent=janela)
             return
 
+        try:
+            datetime.strptime(data, "%d/%m/%Y")
+        except ValueError:
+            messagebox.showerror("Erro", "Informe uma data válida no formato dd/mm/aaaa.", parent=janela)
+            return
+
         contas = carregar_contas()
-        produtos = contas[usuario_logado].get("produtos", [])
+        conta = contas[usuario_logado]
+        produtos = conta.get("produtos", [])
 
         atual = next((p for p in produtos if int(p["codigo"]) == int(produto["codigo"])), None)
 
@@ -327,17 +339,30 @@ def janela_entrada(produto):
             messagebox.showerror("Erro", "Produto não encontrado.", parent=janela)
             return
 
-        atual["quantidade"] = int(atual["quantidade"]) + quantidade
+        if tipo == "Entrada":
+            atual["quantidade"] = int(atual["quantidade"]) + quantidade
+        else:
+            if quantidade > int(atual["quantidade"]):
+                messagebox.showerror("Erro", "Estoque insuficiente.", parent=janela)
+                return
+            atual["quantidade"] = int(atual["quantidade"]) - quantidade
+
+        conta.setdefault("movimentacoes", []).append({
+            "codigo": atual["codigo"],
+            "descricao": atual["descricao"],
+            "tipo": tipo,
+            "quantidade": quantidade,
+            "data": data
+        })
 
         salvar_contas(contas)
         atualizar_tabela()
 
+        messagebox.showinfo("Sucesso", f"{tipo} registrada com sucesso!", parent=janela)
         janela.destroy()
-        entrada()
 
-    tk.Button(frame, text="CONCLUIR", command=concluir, width=20, height=2, bg="#0CA120", fg="white").pack(pady=15)
-    tk.Button(frame, text="CANCELAR", command=lambda: (janela.destroy(), entrada()), width=20, height=2).pack()
-
+    tk.Button(frame, text="CONFIRMAR MOVIMENTAÇÃO", command=concluir, width=27, height=2, bg="#0CA120", fg="white").pack(pady=20)
+    tk.Button(frame, text="CANCELAR", command=janela.destroy, width=27, height=2).pack()
 #======================#
 #   EXCLUIR PRODUTO    #
 #======================#
@@ -691,7 +716,7 @@ def controle():
 
     tk.Button(barra_botoes, text="Novo produto", command=novo_produto, width=15, height=2).pack(side="left", padx=5)
 
-    tk.Button(barra_botoes, text="Entrada", command=entrada, width=15, height=2).pack(side="left", padx=5)
+    tk.Button(barra_botoes, text="Movimentação", command=movimentacao, width=15, height=2).pack(side="left", padx=5)
 
     tk.Button(barra_botoes, text="Excluir", command=excluir_produto, width=15, height=2).pack(side="left", padx=5)
 
