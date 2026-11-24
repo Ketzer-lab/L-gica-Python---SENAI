@@ -72,6 +72,29 @@
             ],
             "proximo_codigo": 3,
             "movimentacoes": []
+        },
+        "rafael": {
+            "senha": "123",
+            "produtos": [
+                {
+                    "codigo": 1,
+                    "descricao": "2",
+                    "categoria": "numero",
+                    "quantidade": 0,
+                    "quantidade_minima": 10,
+                    "valor": 5.5
+                }
+            ],
+            "proximo_codigo": 2,
+            "movimentacoes": [
+                {
+                    "codigo": 1,
+                    "descricao": "2",
+                    "tipo": "Saída",
+                    "quantidade": 11,
+                    "data": "23/11/2026"
+                }
+            ]
         }
     }
 }
