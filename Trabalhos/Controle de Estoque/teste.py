@@ -629,6 +629,171 @@ def filtrar():
     tk.Button(frame, text="LIMPAR FILTROS", command=limpar, width=25, height=2).pack(pady=5)
     tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack(pady=5)
 
+#=============================#
+#       RELATÓRIO             #
+#=============================#
+
+def relatorio():
+    janela = tk.Toplevel(root)
+    janela.title("Relatório de Movimentações")
+    janela.geometry("1050x650")
+    janela.resizable(False, False)
+    janela.configure(bg="#EFF0B8")
+    janela.transient(root)
+    janela.grab_set()
+
+    frame = tk.Frame(janela, bg="light yellow")
+    frame.place(relx=0.5, rely=0.5, relwidth=0.97, relheight=0.96, anchor="center")
+
+    frame.grid_columnconfigure(0, weight=1)
+    frame.grid_rowconfigure(3, weight=1)
+
+    tk.Label(frame, text="RELATÓRIO DE MOVIMENTAÇÕES", font=("Helvetica", 20, "bold"), bg="light yellow").grid(row=0, column=0, pady=15)
+
+    # PERÍODO
+    frame_datas = tk.Frame(frame, bg="light yellow")
+    frame_datas.grid(row=1, column=0, pady=10)
+
+    tk.Label(frame_datas, text="Data inicial:", font=("Arial", 12, "bold"), bg="light yellow").pack(side="left", padx=5)
+
+    entry_inicio = tk.Entry(frame_datas, font=("Arial", 12), width=12, justify="center")
+    entry_inicio.pack(side="left", padx=5)
+
+    tk.Label(frame_datas, text="Data final:", font=("Arial", 12, "bold"), bg="light yellow").pack(side="left", padx=5)
+
+    entry_fim = tk.Entry(frame_datas, font=("Arial", 12), width=12, justify="center")
+    entry_fim.pack(side="left", padx=5)
+
+    # TABELA
+    area_tabela = tk.Frame(frame, bg="white")
+    area_tabela.grid(row=3, column=0, sticky="nsew", padx=10, pady=10)
+
+    colunas = ("codigo", "descricao", "tipo", "quantidade", "data")
+
+    tabela_relatorio = ttk.Treeview(area_tabela, columns=colunas, show="headings")
+
+    tabela_relatorio.heading("codigo", text="Código")
+    tabela_relatorio.heading("descricao", text="Produto")
+    tabela_relatorio.heading("tipo", text="Movimentação")
+    tabela_relatorio.heading("quantidade", text="Quantidade")
+    tabela_relatorio.heading("data", text="Data")
+
+    tabela_relatorio.column("codigo", width=90, anchor="center")
+    tabela_relatorio.column("descricao", width=350, anchor="center")
+    tabela_relatorio.column("tipo", width=180, anchor="center")
+    tabela_relatorio.column("quantidade", width=150, anchor="center")
+    tabela_relatorio.column("data", width=150, anchor="center")
+
+    tabela_relatorio.tag_configure("entrada", foreground="green")
+    tabela_relatorio.tag_configure("saida", foreground="red")
+
+    scrollbar = ttk.Scrollbar(area_tabela, orient="vertical", command=tabela_relatorio.yview)
+    tabela_relatorio.configure(yscrollcommand=scrollbar.set)
+
+    tabela_relatorio.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    # RESUMO
+    frame_resumo = tk.Frame(frame, bg="light yellow")
+    frame_resumo.grid(row=4, column=0, pady=10)
+
+    label_entradas = tk.Label(frame_resumo, text="Entradas: 0 unidades", font=("Arial", 12, "bold"), fg="green", bg="light yellow")
+    label_entradas.pack(side="left", padx=25)
+
+    label_saidas = tk.Label(frame_resumo, text="Saídas: 0 unidades", font=("Arial", 12, "bold"), fg="red", bg="light yellow")
+    label_saidas.pack(side="left", padx=25)
+
+    # APLICAR FILTRO
+    def aplicar_filtro():
+        inicio = entry_inicio.get().strip()
+        fim = entry_fim.get().strip()
+
+        if not inicio or not fim:
+            messagebox.showwarning("Atenção", "Informe as duas datas.", parent=janela)
+            return
+
+        try:
+            inicio = datetime.strptime(inicio, "%d/%m/%Y").date()
+            fim = datetime.strptime(fim, "%d/%m/%Y").date()
+
+            if fim < inicio:
+                raise ValueError
+
+        except ValueError:
+            messagebox.showerror("Erro", "Informe um período válido no formato dd/mm/aaaa.", parent=janela)
+            return
+
+        tabela_relatorio.delete(*tabela_relatorio.get_children())
+
+        contas = carregar_contas()
+        historico = contas[usuario_logado].get("movimentacoes", [])
+
+        total_entradas = 0
+        total_saidas = 0
+
+        movimentacoes_filtradas = []
+
+        for m in historico:
+            try:
+                data = datetime.strptime(m["data"], "%d/%m/%Y").date()
+            except (ValueError, KeyError):
+                continue
+
+            if inicio <= data <= fim:
+                movimentacoes_filtradas.append((data, m))
+
+        movimentacoes_filtradas.sort(key=lambda item: item[0])
+
+        for data, m in movimentacoes_filtradas:
+            tipo = m["tipo"]
+            quantidade = int(m["quantidade"])
+
+            if tipo == "Entrada":
+                total_entradas += quantidade
+                tag = "entrada"
+            elif tipo == "Saída":
+                total_saidas += quantidade
+                tag = "saida"
+            else:
+                continue
+
+            tabela_relatorio.insert(
+                "",
+                "end",
+                values=(
+                    m["codigo"],
+                    m["descricao"],
+                    tipo,
+                    quantidade,
+                    data.strftime("%d/%m/%Y")
+                ),
+                tags=(tag,)
+            )
+
+        label_entradas.config(text=f"Entradas: {total_entradas} unidades")
+        label_saidas.config(text=f"Saídas: {total_saidas} unidades")
+
+        if not movimentacoes_filtradas:
+            messagebox.showinfo("Relatório", "Nenhuma movimentação encontrada nesse período.", parent=janela)
+
+    # LIMPAR
+    def limpar():
+        entry_inicio.delete(0, "end")
+        entry_fim.delete(0, "end")
+        tabela_relatorio.delete(*tabela_relatorio.get_children())
+        label_entradas.config(text="Entradas: 0 unidades")
+        label_saidas.config(text="Saídas: 0 unidades")
+
+    # BOTÕES
+    frame_botoes = tk.Frame(frame, bg="light yellow")
+    frame_botoes.grid(row=2, column=0, pady=5)
+
+    tk.Button(frame_botoes, text="GERAR RELATÓRIO", command=aplicar_filtro, width=20, height=2, bg="#0CA120", fg="white").pack(side="left", padx=5)
+
+    tk.Button(frame_botoes, text="LIMPAR", command=limpar, width=15, height=2).pack(side="left", padx=5)
+
+    tk.Button(frame_botoes, text="FECHAR", command=janela.destroy, width=15, height=2).pack(side="left", padx=5)
+
 #=======================#
 #   TELAS DE ACESSO     #
 #=======================#
@@ -692,7 +857,6 @@ def tela_criar_conta():
 #     TELA PRINCIPAL          #
 #=============================#
 
-
 def controle():
     global tabela
 
@@ -722,6 +886,8 @@ def controle():
 
     tk.Button(barra_botoes, text="Filtrar", command=filtrar, width=15, height=2).pack(side="left", padx=5)
 
+    tk.Button(barra_botoes, text="Relatório", command=relatorio, width=15, height=2, bg="#2471A3", fg="white").pack(side="left", padx=5)
+
     tk.Button(barra_botoes, text="Sair", command=sair, width=15, height=2).pack(side="left", padx=5)
 
     # ÁREA DA TABELA
@@ -744,6 +910,7 @@ def controle():
     tabela.column("categoria", width=250, anchor="center")
     tabela.column("quantidade", width=150, anchor="center")
     tabela.column("valor", width=150, anchor="center")
+
     # SCROLLBAR
     scrollbar = ttk.Scrollbar(area_tabela, orient="vertical", command=tabela.yview)
 
@@ -758,7 +925,6 @@ def controle():
     # CARREGA PRODUTOS
     atualizar_tabela()
 
-    
 #==========================#
 #     JANELA PRINCIPAL     #
 #==========================#
