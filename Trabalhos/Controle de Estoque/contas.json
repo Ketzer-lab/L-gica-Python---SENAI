@@ -7,11 +7,20 @@
                     "codigo": 1,
                     "descricao": "NOTEBOOK LENOVO",
                     "categoria": "ELETRÔNICOS",
-                    "quantidade": 6,
-                    "valor": 3450.0
+                    "quantidade": 5,
+                    "valor": 3450.0,
+                    "quantidade_minima": 5
+                },
+                {
+                    "codigo": 3,
+                    "descricao": "teste",
+                    "categoria": "teste",
+                    "quantidade": 10,
+                    "quantidade_minima": 2,
+                    "valor": 1.0
                 }
             ],
-            "proximo_codigo": 3,
+            "proximo_codigo": 4,
             "movimentacoes": [
                 {
                     "codigo": 1,
@@ -31,6 +40,20 @@
                     "codigo": 1,
                     "descricao": "NOTEBOOK LENOVO",
                     "tipo": "Saída",
+                    "quantidade": 1,
+                    "data": "23/11/2026"
+                },
+                {
+                    "codigo": 1,
+                    "descricao": "NOTEBOOK LENOVO",
+                    "tipo": "Saída",
+                    "quantidade": 2,
+                    "data": "23/11/2026"
+                },
+                {
+                    "codigo": 1,
+                    "descricao": "NOTEBOOK LENOVO",
+                    "tipo": "Entrada",
                     "quantidade": 1,
                     "data": "23/11/2026"
                 }

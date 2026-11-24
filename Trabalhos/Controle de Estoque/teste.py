@@ -18,9 +18,6 @@ tabela = None
 #     Funções     #
 #=================#
 
-def teste():
-    print("teste")
-
 def limpar_root():
     for widget in root.winfo_children():
         widget.destroy()
@@ -127,8 +124,31 @@ def carregar_produtos():
 
 def atualizar_tabela():
     tabela.delete(*tabela.get_children())
+
     for p in carregar_produtos():
-        tabela.insert("", "end", values=(p["codigo"], p["descricao"], p["categoria"], p["quantidade"], f'R$ {p["valor"]:.2f}'))
+        quantidade = int(p["quantidade"])
+        quantidade_minima = int(p.get("quantidade_minima", 0))
+
+        if quantidade < quantidade_minima:
+            tag = "estoque_baixo"
+        else:
+            tag = "normal"
+
+        tabela.insert(
+            "",
+            "end",
+            values=(
+                p["codigo"],
+                p["descricao"],
+                p["categoria"],
+                quantidade,
+                f'R$ {p["valor"]:.2f}'
+            ),
+            tags=(tag,)
+        )
+
+    tabela.tag_configure("estoque_baixo", background="red", foreground="white")
+    tabela.tag_configure("normal", background="white", foreground="black")
 
 def novo_produto():
     janela = tk.Toplevel(root)
@@ -161,6 +181,10 @@ def novo_produto():
     entry_quantidade = tk.Entry(frame, font=("Arial", 13))
     entry_quantidade.pack(fill="x", padx=20, pady=5)
 
+    tk.Label(frame, text="Quantidade mínima:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+    entry_quantidade_minima = tk.Entry(frame, font=("Arial", 13))
+    entry_quantidade_minima.pack(fill="x", padx=20, pady=5)
+
     tk.Label(frame, text="Valor unitário (R$):", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_valor = tk.Entry(frame, font=("Arial", 13))
     entry_valor.pack(fill="x", padx=20, pady=5)
@@ -171,8 +195,9 @@ def novo_produto():
         categoria = entry_categoria.get().strip()
         quantidade = entry_quantidade.get().strip()
         valor = entry_valor.get().strip()
+        quantidade_minima = entry_quantidade_minima.get().strip()
 
-        if not all([descricao, categoria, quantidade, valor]):
+        if not all([descricao, categoria, quantidade, quantidade_minima, valor]):
             messagebox.showwarning("Atenção", "Preencha todos os campos.", parent=janela)
             return
 
@@ -182,6 +207,20 @@ def novo_produto():
                 raise ValueError
         except ValueError:
             messagebox.showerror("Erro", "Informe uma quantidade inteira maior que zero.", parent=janela)
+            return
+
+        try:
+            quantidade_minima = int(quantidade_minima)
+
+            if quantidade_minima < 0:
+                raise ValueError
+
+        except ValueError:
+            messagebox.showerror(
+                "Erro",
+                "Informe uma quantidade mínima inteira maior ou igual a zero.",
+                parent=janela
+            )
             return
 
         try:
@@ -205,6 +244,7 @@ def novo_produto():
             "descricao": descricao,
             "categoria": categoria,
             "quantidade": quantidade,
+            "quantidade_minima": quantidade_minima,
             "valor": valor
         })
 
@@ -276,7 +316,6 @@ def movimentacao():
 
     tk.Button(frame, text="SELECIONAR", command=selecionar, width=20, height=2, bg="#0CA120", fg="white").grid(row=4, column=0, pady=5)
     tk.Button(frame, text="CANCELAR", command=janela.destroy, width=20, height=2).grid(row=5, column=0, pady=5)
-
 
 def janela_movimentacao_produto(produto):
     janela = tk.Toplevel(root)
@@ -367,7 +406,6 @@ def janela_movimentacao_produto(produto):
 #   EXCLUIR PRODUTO    #
 #======================#
 
-
 def excluir_produto():
     selecionado = tabela.selection()
 
@@ -419,11 +457,9 @@ def excluir_produto():
         "Produto excluído com sucesso!"
     )
 
-
 #====================#
 #   ALTERAR PRODUTO  #
 #====================#
-
 
 def editar_produto(event=None):
     selecionado = tabela.selection()
@@ -476,6 +512,14 @@ def editar_produto(event=None):
     entry_quantidade.pack(fill="x", padx=20, pady=5)
     entry_quantidade.insert(0, produto["quantidade"])
 
+    # QUANTIDADE MÍNIMA
+    tk.Label(frame, text="Quantidade mínima:", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
+
+    entry_quantidade_minima = tk.Entry(frame, font=("Arial", 13))
+    entry_quantidade_minima.pack(fill="x", padx=20, pady=5)
+
+    entry_quantidade_minima.insert(0, produto.get("quantidade_minima", 0))
+
     # VALOR
     tk.Label(frame, text="Valor unitário (R$):", font=("Arial", 12, "bold"), bg="light yellow").pack(anchor="w", padx=20)
     entry_valor = tk.Entry(frame, font=("Arial", 13))
@@ -487,9 +531,10 @@ def editar_produto(event=None):
         descricao = entry_descricao.get().strip()
         categoria = entry_categoria.get().strip()
         quantidade = entry_quantidade.get().strip()
+        quantidade_minima = entry_quantidade_minima.get().strip()
         valor = entry_valor.get().strip()
 
-        if not all([descricao, categoria, quantidade, valor]):
+        if not all([descricao, categoria, quantidade, quantidade_minima, valor]):
             messagebox.showwarning("Atenção", "Preencha todos os campos.", parent=janela)
             return
 
@@ -499,6 +544,20 @@ def editar_produto(event=None):
                 raise ValueError
         except ValueError:
             messagebox.showerror("Erro", "Informe uma quantidade inteira maior ou igual a zero.", parent=janela)
+            return
+
+        try:
+            quantidade_minima = int(quantidade_minima)
+
+            if quantidade_minima < 0:
+                raise ValueError
+
+        except ValueError:
+            messagebox.showerror(
+                "Erro",
+                "Informe uma quantidade mínima inteira maior ou igual a zero.",
+                parent=janela
+            )
             return
 
         try:
@@ -521,6 +580,7 @@ def editar_produto(event=None):
         atual["descricao"] = descricao
         atual["categoria"] = categoria
         atual["quantidade"] = quantidade
+        atual["quantidade_minima"] = quantidade_minima
         atual["valor"] = valor
 
         salvar_contas(contas)
