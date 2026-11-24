@@ -592,7 +592,6 @@ def editar_produto(event=None):
     tk.Button(frame, text="SALVAR ALTERAÇÕES", command=salvar, width=25, height=2, bg="#0CA120", fg="white").pack(pady=15)
     tk.Button(frame, text="CANCELAR", command=janela.destroy, width=25, height=2).pack()
 
-
 #==============#
 #   FILTRAR    #
 #==============#
@@ -946,7 +945,7 @@ def controle():
 
     tk.Button(barra_botoes, text="Filtrar", command=filtrar, width=15, height=2).pack(side="left", padx=5)
 
-    tk.Button(barra_botoes, text="Relatório", command=relatorio, width=15, height=2, bg="#2471A3", fg="white").pack(side="left", padx=5)
+    tk.Button(barra_botoes, text="Relatório", command=relatorio, width=15, height=2).pack(side="left", padx=5)
 
     tk.Button(barra_botoes, text="Sair", command=sair, width=15, height=2).pack(side="left", padx=5)
 
